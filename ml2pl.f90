@@ -77,11 +77,11 @@ PROGRAM ml2pl
   !---------------------------------------------------------------------
 
   ! Read the names of the variables:
-  call read_column("variable_list_ml2pl", varpossib)
+  call read_column(varpossib, "variable_list_ml2pl")
   n_var =size(varpossib)
 
   ! Read target pressure levels:
-  call read_column("press_levels.txt", plev, first=2)
+  call read_column(plev, "press_levels.txt", first=2)
   n_plev = size(plev)
   ! Quick check:
   if (n_plev >= 2) &
@@ -96,12 +96,10 @@ PROGRAM ml2pl
   call find_coord(ncid_in, varid=varid, std_name="longitude")
   call nf95_gw_var(ncid_in, varid, rlon)
   iim = size(rlon)
-  print *, 'ml2pl: iim = ', iim
 
   call find_coord(ncid_in, varid=varid, std_name="latitude")
   call nf95_gw_var(ncid_in, varid, rlat)
   n_lat = size(rlat)
-  print *, 'ml2pl: n_lat = ', n_lat
 
   ! Read IDs of variables to interpolate:
   allocate(varid_in(n_var))
@@ -112,7 +110,6 @@ PROGRAM ml2pl
   ! Get the number of model levels:
   call nf95_inquire_variable(ncid_in, varid_in(1), dimids=dimids)
   call nf95_inquire_dimension(ncid_in, dimids(3), nclen=llm)
-  print *, 'ml2pl: llm = ', llm
 
   hybrid = len_trim(pressure_var) == 0
 
@@ -148,7 +145,6 @@ PROGRAM ml2pl
   end if
   call nf95_gw_var(ncid_in, varid_t_in, time)
   ntim = size(time)
-  print *, 'ml2pl: ntim = ', ntim
 
   call nf95_create("output_file_ml2pl.nc", nf90_clobber, ncid_out)
 
