@@ -33,7 +33,7 @@ time. There is no constraint on the dimensions.
 Options:
    -h                       : this help message
    -p variable              : name of 4-dimensional variable in the input file
-                              or the pressure file containing the
+                              or in the pressure file containing the
                               pressure field at model levels
    -v variable[,variable...]: names of variables you want to interpolate, 
                               and possibly extrapolate if target pressure 
@@ -199,4 +199,11 @@ EOF
 # pressure_var is not defined.)
 
 mv output_file_ml2pl.nc $output_file
+
+# Copy all global attributes:
+ncks --history --append --exclude input_file_ml2pl.nc $output_file >/dev/null
+# (Suppressed output: a hint from NCO about the use of --exclude and
+# coordinate variables.)
+
+# Clean up:
 rm input_file_ml2pl.nc variable_list_ml2pl
