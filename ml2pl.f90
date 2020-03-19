@@ -44,7 +44,7 @@ PROGRAM ml2pl
   INTEGER dim_x, dim_y, dim_z, dim_t
   integer, allocatable:: dimids(:)
   INTEGER ncid_in, ncid_out, ncerr
-  integer varid_x, varid_y, varid_z, varid_t, varid_t_in, varid
+  integer varid_x, varid_y, varid_z, varid_t, varid_t_in, varid, varid_p
 
   integer, allocatable:: varid_in(:) ! (n_var)
   ! IDs in the input NetCDF file of the variables to interpolate
@@ -118,26 +118,25 @@ PROGRAM ml2pl
 
   if (hybrid) then
      print *, 'Using "ap", "b" and "ps" for the input pressure field...'
-
-     call nf95_inq_varid(ncid_in, 'ap', varid)
-     call nf95_get_att(ncid_in, varid, "units", units)
-     call assert(units == "Pa", "ap should be in Pa")
-
      allocate(ap(llm), b(llm), ps(iim, n_lat))
 
+     call nf95_inq_varid(ncid_in, 'ps', varid_p)
+     call nf95_get_att(ncid_in, varid_p, "units", units)
+     call assert(units == "Pa", "ps should be in Pa")
+
+     call nf95_inq_varid(ncid_in, 'ap', varid)
      call nf95_get_var(ncid_in, varid, ap)
      ap = ap / 100. ! convert from Pa to hPa
 
      call nf95_inq_varid(ncid_in, 'b', varid)
      call nf95_get_var(ncid_in, varid, b)
 
-     call nf95_inq_varid(ncid_in, 'ps', varid)
   else
      print *, 'Using "' // trim(pressure_var) // &
           '" for the input pressure field...'
-     call nf95_inq_varid(ncid_in, trim(pressure_var), varid)
+     call nf95_inq_varid(ncid_in, trim(pressure_var), varid_p)
 
-     call nf95_get_att(ncid_in, varid, "units", units)
+     call nf95_get_att(ncid_in, varid_p, "units", units)
      call assert(units == "Pa", trim(pressure_var) // " should be in Pa")
   end if
 
@@ -203,12 +202,12 @@ PROGRAM ml2pl
   ! interpolate, then interpolate at each horizontal position:
   DO l = 1, ntim
      if (hybrid) then
-        call nf95_get_var(ncid_in, varid, ps, start=(/1, 1, l/))
+        call nf95_get_var(ncid_in, varid_p, ps, start=(/1, 1, l/))
         ps = ps / 100. ! convert from Pa to hPa
 
-        forall (k = 1: llm) pres(:, :, k) = ap(k) + b(k) * ps
+        forall (k = 1:llm) pres(:, :, k) = ap(k) + b(k) * ps
      else
-        call nf95_get_var(ncid_in, varid, pres, start=(/1, 1, 1, l/))
+        call nf95_get_var(ncid_in, varid_p, pres, start=(/1, 1, 1, l/))
         pres = pres / 100. ! convert from Pa to hPa
      end if
 
