@@ -11,5 +11,3 @@ add_executable(ml2pl ml2pl.f90)
 
 target_link_libraries(ml2pl netcdf95 jumble numer_rec_95
   NetCDF_Fortran::netcdff)
-
-include(ConfigureCompilerFlags)
