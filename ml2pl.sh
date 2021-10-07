@@ -17,10 +17,10 @@
 executable=/.../libexec/ml2pl
 
 # Set up the necessary environment:
-module purge 2>/dev/null
-module load netcdf... 2>/dev/null
-module load nco... 2>/dev/null
-module load intel... 2>/dev/null
+module purge --silent
+module load netcdf... --silent
+module load nco... --silent
+module load intel... --silent
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:...NetCDF...
 
 USAGE="usage: ml2pl.sh [OPTION]... input-file output-file [pressure-file]
