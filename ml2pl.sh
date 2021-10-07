@@ -14,7 +14,7 @@
 ##set -x
 
 # Absolute path to Fortran executable:
-executable=/.../build/Ml2pl/ml2pl
+executable=/.../libexec/ml2pl
 
 # Set up the necessary environment:
 module purge 2>/dev/null
