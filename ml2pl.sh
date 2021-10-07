@@ -201,7 +201,8 @@ EOF
 mv output_file_ml2pl.nc $output_file
 
 # Copy all global attributes:
-ncks --history --append --exclude input_file_ml2pl.nc $output_file >/dev/null
+ncks --history --append --exclude input_file_ml2pl.nc $output_file >/dev/null \
+     2>&1
 # (Suppressed output: a hint from NCO about the use of --exclude and
 # coordinate variables.)
 
