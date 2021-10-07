@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
-project(Ml2pl Fortran)
+project(Ml2pl LANGUAGES Fortran)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
-
 find_package(NetCDF95 REQUIRED CONFIG)
 find_package(NR_util REQUIRED CONFIG)
 find_package(Jumble REQUIRED CONFIG)
