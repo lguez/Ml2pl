@@ -1,7 +1,7 @@
 [
     {
 	"title": "Test_ml2pl", 
-	"args": 
+	"command": 
 	[
 	    "ml2pl.sh", "-p", "pres", "-v", "temp", 
 	    "/ccc/cont003/home/gencmip6/guezl/Ml2pl/histins.nc", 
