@@ -7,11 +7,10 @@ find_package(NR_util REQUIRED CONFIG)
 find_package(Jumble REQUIRED CONFIG)
 find_package(Numer_Rec_95 REQUIRED CONFIG)
 find_package(NetCDF REQUIRED)
-include(FindPkgConfig)
-pkg_check_modules(netcdf-fortran IMPORTED_TARGET netcdf-fortran)
-
+find_package(NetCDF_Fortran REQUIRED)
 add_executable(ml2pl ml2pl.f90)
-target_include_directories(ml2pl PRIVATE ${netcdff_INCLUDE_DIR})
-target_link_libraries(ml2pl netcdf95 jumble numer_rec_95)
+
+target_link_libraries(ml2pl netcdf95 jumble numer_rec_95
+  NetCDF_Fortran::netcdff)
 
 include(ConfigureCompilerFlags)
