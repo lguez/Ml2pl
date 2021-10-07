@@ -4,9 +4,8 @@
 	"command": 
 	[
 	    "ml2pl.sh", "-p", "pres", "-v", "temp", 
-	    "/ccc/cont003/home/gencmip6/guezl/Ml2pl/histins.nc", 
-	    "histins_pl.nc"
+	    "$src_dir/Tests/histins.nc", "histins_pl.nc"
 	],
-	"required": ["/ccc/cont003/home/gencmip6/guezl/Ml2pl/press_levels.txt"]
+	"required": ["$src_dir/Tests/press_levels.txt"]
     }
 ]
