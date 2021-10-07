@@ -204,7 +204,7 @@ mv output_file_ml2pl.nc $output_file
 ncks --history --append --exclude input_file_ml2pl.nc $output_file >/dev/null \
      2>&1
 # (Suppressed output: a hint from NCO about the use of --exclude and
-# coordinate variables.)
+# coordinate variables and an info about filetype.)
 
 # Clean up:
 rm input_file_ml2pl.nc variable_list_ml2pl
