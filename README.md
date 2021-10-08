@@ -1,5 +1,4 @@
-Interpolation to pressure levels
---------------------------------
+# Interpolation to pressure levels
 
 The script `ml2pl.sh` interpolates history files of LMDZ (files named
 `hist....nc`) from model levels to pressure levels. Interpolation is
@@ -19,7 +18,7 @@ On Ciclad:
 
     /data/guez/bin/ml2pl.sh
 
-### Installation
+## Installation
 
 `Ml2pl` is written in Fortran 2003 and Bash. So you need a Fortran 2003
 compiler and Bash on your machine. Moreover, you need to have the NetCDF
@@ -142,7 +141,7 @@ trash everything else if you want. (Be careful that if you type
 `make clean` in the top directory and `ml2pl` is still there then it
 will be deleted.)
 
-### Usage
+## Usage
 
 Running the command with argument `-h` will produce a help message:
 
@@ -191,5 +190,5 @@ Running the command with argument `-h` will produce a help message:
     line. There is no constraint on these values nor on the number of
     values.
 
-Ci-joint [un exemple de fichier
-`press_levels.txt`](../press_levels.txt "press_levels.txt"){.internal-link}.
+There is [an example for file
+`press_levels.txt`](Tests/press_levels.txt) in directory Tests.
