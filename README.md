@@ -1,8 +1,12 @@
-# Interpolation to pressure levels
+# What is it?
 
 The script `ml2pl.sh` interpolates history files of LMDZ (files named
 `hist....nc`) from model levels to pressure levels. Interpolation is
-linear in logarithm of pressure. If you want to use this program on the
+linear in logarithm of pressure.
+
+# Note for the users of French supercomputing centers
+
+If you want to use this program on the
 computers jean-zay at IDRIS, or irene at TGCC, or Ciclad at IPSL, the
 program is already installed at the following paths.
 
@@ -18,7 +22,7 @@ On Ciclad:
 
     /data/guez/bin/ml2pl.sh
 
-## Installation
+# Installation
 
 Dependencies: `Ml2pl` is written in Fortran 2003 and Bash. So you need
 a Fortran 2003 compiler and Bash on your machine. You must first
@@ -29,7 +33,7 @@ and
 Note that NetCDF-Fortran must be installed using the same Fortran
 compiler than the one you are going to use for `Ml2pl`.
 
-### Installation with CMake
+## Installation with CMake
 
 This is the recommended way.
 
@@ -61,7 +65,7 @@ Note that the installation process also installs a Fortran executable
 file, `ml2pl`, in `$CMAKE_INSTALL_PREFIX/libexec`. Do not remove this
 file.
 
-### Installation directly with make
+## Installation directly with make
 
 This is the (old) less automated way, not recommended.
 
@@ -74,115 +78,87 @@ and
 The five Fortran libraries, NetCDF-Fortran, NetCDF95, NR\_util,
 Numer\_Rec\_95 and Jumble, must be compiled with the same compiler.
 
-2.  Decide which Fortran 2003 compiler you want to use. Remember that
-    you need the NetCDF-Fortran library installed with the chosen
-    compiler. If you have version 4 of the NetCDF-Fortran library installed
-    then the program `nf-config` should have been installed with the
-    library. (You can also try the command `nc-config` instead.) This
-    program will tell you the compiler you need to use with your
-    NetCDF-Fortran library. Just type:
-
-        nf-config --fc
-
-    You indicate your choice of Fortran compiler by setting the
-    environment variable FC. Here is an example of setting the variable
-    `FC` in Bash:
-
-        export FC=the-output-of-nf-config--fc
-
-3.  If the NetCDF-Fortran library installed with the chosen compiler is not in
-    standard locations, you should set the variables `NETCDF_INC_DIR`
-    and `LDLIBS`. The directory `$NETCDF_INC_DIR` should contain the
-    compiled NetCDF-Fortran module interfaces (usually `netcdf.mod` and
-    `typesizes.mod`). Note that the program does not need `netcdf.inc`.
-    If you have the command `nf-config`, type:
-
-        nf-config --includedir
-
-    to find out the value of `NETCDF_INC_DIR`. For example:
-
-        export NETCDF_INC_DIR=the-output-of-nf-config--includedir
-
-    `LDLIBS` should give the path to the compiled NetCDF and
-    NetCDF-Fortran libraries and the name of those libraries, in the
-    form required by your compiler.  If you have the command
-    `nf-config`, type:
-
-        nf-config --flibs
-
-    and paste the result of the command, between quotes, into `LDLIBS`.
-    For example:
-
-        export LDLIBS="the-output-of-nf-config--flibs"
-
-    Here are a few tips to help you define `LDLIBS` if you do not have
-    the command `nf-config` nor the command `nc-config`. Usually, the
-    path to a library should be given in a `-L` option and the name of a
-    library should be given in a `-l` option. So for example the
-    adequate definition could be:
-
-        export LDLIBS="-L/usr/lib -lnetcdf"
-
-    which means that `libnetcdf.a` is to be found in `/user/lib`.
-    Depending on your NetCDF installation, the Fortran 90 interface of
-    NetCDF may be included in `libnetcdf.a` or may be in a separate
-    library (usually `libnetcdff.a`, with two \'f\'s). If you have a
-    separate library for the Fortran 90 interface, you have to include
-    the path to it and its name in the variable `LDLIBS`. For example:
-
-        export LDLIBS="-L/user/lib -L/user/lib/NetCDF_gfortran -lnetcdff -lnetcdf"
-
-    Note that the order of options `-l` is usually important: the
-    library for the Fortran 90 interface should be referenced first.
-    (The order of options `-L` usually does not matter.)
-
-4.  Optionally, you may choose additional compiler options by setting
-    the variable `FFLAGS`. For example:
-
-        export FFLAGS=-O3
-
-5.  The parts of makefiles in the directory `Compiler_options` contain
-    the compiler options for free source form and for reference to
-    `NETCDF_INC_DIR`. There is one file for each of the following
-    compilers : g95, gfortran, ifort, pgfortran, sxf90, xlf95. If you do
-    not see the compiler you want in this list, you will have to create
-    a similar file for your compiler. **If the above instructions don\'t
-    work, please directly edit the makefile corresponding to your netcdf
-    compiler, for example `Compiler_options/gfortran.mk`.**
-6.  The makefiles are written for GNU make. The command invoking GNU
+2. Indicate your Fortran compiler by setting the variable FC in
+   GNUmakefile.
+	
+2. If necessary, add or modify options `-I` in the variable FFLAGS in
+   GNUmakefile. The options `-I` should give the path to the `.mod` files
+   of the five Fortran libraries, NetCDF-Fortran, NetCDF95, NR\_util,
+   Numer\_Rec\_95 and Jumble.
+   
+3. If necessary, add or modify options `-L` in the variable LDLIBS in
+   GNUmakefile. The options `-L` should give the path to the library
+   files of the five Fortran libraries: `libnetcdff.a`,
+   `libnetcdf95.a`, `libnr_util.a`, `libnumer_rec_95.a` and
+   `libjumble.a` (or the dynamic libraries with a `.so` suffix).
+	
+6.  The makefile is written for GNU make. The command invoking GNU
     make is usually `make` or `gmake`. So, for example, type:
 
         cd the-Ml2pl-directory-you-downloaded
         make
 
     After compilation, the executable binary file `ml2pl` should be
-    created in the directory `Ml2pl_with_lib`. There is also a Bash
-    script `ml2pl.sh` in the directory `Ml2pl_with_lib/Ml2pl`.
+    created.
 
 7.  Decide where you want to keep the executable binary file `ml2pl` and
     move it there. (Or you can just leave it where it is, if you want.)
     We advise not to put it into a directory appearing in your
     environment variable `PATH`. This would not be convenient because
-    you will not run `ml2pl` directly. Instead, you will invoke the
-    script `ml2pl.sh`.
-8.  In the script `ml2pl.sh`, locate the line:
+    you will not run `ml2pl` directly.
+	
+7. There is also a Bash script `ml2pl_in.sh` in the directory of
+   Ml2pl. In the script `ml2pl_in.sh`, locate the line:
 
-        executable=...
+        executable=@CMAKE_INSTALL_FULL_LIBEXECDIR@/ml2pl
 
-    Replace the ellipsis by the absolute path to the executable binary
-    file `ml2pl`. For example:
+    Replace `@CMAKE_INSTALL_FULL_LIBEXECDIR@` by the absolute path to
+    the executable binary file `ml2pl`. For example:
 
-        executable=~/Ml2pl_with_lib/ml2pl
+        executable=~/.local/bin/ml2pl
 
-9.  It may be convenient to move the script `ml2pl.sh` to somewhere in
-    your `PATH`.
+9.  Rename `ml2pl_in.sh` to `ml2pl.sh`. It may be convenient to move
+    the script `ml2pl.sh` to somewhere in your `PATH`.
 
 `ml2pl` and `ml2pl.sh` are the only files you will need. So you can
-trash everything else if you want. (Be careful that if you type
-`make clean` in the top directory and `ml2pl` is still there then it
-will be deleted.)
+trash everything else if you want. (Be careful that if you type `make
+clean` and `ml2pl` is still there then it will be deleted.)
 
-## Usage
+### Troubleshooting
+
+For installation directly with make, here are a few tips to help you
+define `FFLAGS` and `LDLIBS`, especially with regard to the NetCDF and
+NetCDF-Fortran libraries.
+
+1. If you have version 4 of the NetCDF-Fortran library installed then
+   the program `nf-config` should have been installed with the
+   library. (You can also try the command `nc-config` instead.) This
+   program will tell you the compiler used to compile your
+   NetCDF-Fortran library:
+
+		nf-config --fc
+
+3. It will give you the directory containing the compiled
+   NetCDF-Fortran module interfaces (usually `netcdf.mod` and
+   `typesizes.mod`):
+
+        nf-config --includedir
+		
+3. It will give you what you need to copy to `LDLIBS`:
+
+        nf-config --flibs
+
+3. After `-l`, in `LDLIBS`, you write the name of the library without
+   prefix lib and without suffix `.a` or `.so`. For example `-lnetcdf`
+   for `libnetcdf.a`. The NetCDF-Fortran library should be in the file
+   `libnetcdff.a` or `libnetcdff.so`, with two 'f's.
+
+3. Note that the order of options `-l` is usually important: the
+   NetCDF-Fortran library should be referenced first.
+   
+3. The order of options `-L` usually does not matter.
+
+# Usage
 
 Running the command with argument `-h` will produce a help message:
 
