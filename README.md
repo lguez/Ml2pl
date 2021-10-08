@@ -78,7 +78,7 @@ and
 The five Fortran libraries, NetCDF-Fortran, NetCDF95, NR\_util,
 Numer\_Rec\_95 and Jumble, must be compiled with the same compiler.
 
-2. Indicate your Fortran compiler by setting the variable FC in
+1. Indicate your Fortran compiler by setting the variable FC in
    GNUmakefile.
 	
 2. If necessary, add or modify options `-I` in the variable FFLAGS in
