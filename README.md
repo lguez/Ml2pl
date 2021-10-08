@@ -40,7 +40,7 @@ This is the recommended way.
 Additional dependency: you must first install
 [CMake](https://cmake.org/download) (version ≥ 3.16).
 
-2.  Type:
+1.  Type:
 
         cd the-Ml2pl-directory-you-downloaded
         mkdir build
@@ -130,7 +130,7 @@ For installation directly with make, here are a few tips to help you
 define `FFLAGS` and `LDLIBS`, especially with regard to the NetCDF and
 NetCDF-Fortran libraries.
 
-1. If you have version 4 of the NetCDF-Fortran library installed then
+* If you have version 4 of the NetCDF-Fortran library installed then
    the program `nf-config` should have been installed with the
    library. (You can also try the command `nc-config` instead.) This
    program will tell you the compiler used to compile your
@@ -138,25 +138,25 @@ NetCDF-Fortran libraries.
 
 		nf-config --fc
 
-3. It will give you the directory containing the compiled
+* It will give you the directory containing the compiled
    NetCDF-Fortran module interfaces (usually `netcdf.mod` and
    `typesizes.mod`):
 
         nf-config --includedir
 		
-3. It will give you what you need to copy to `LDLIBS`:
+* It will give you what you need to copy to `LDLIBS`:
 
         nf-config --flibs
 
-3. After `-l`, in `LDLIBS`, you write the name of the library without
+* After `-l`, in `LDLIBS`, you write the name of the library without
    prefix lib and without suffix `.a` or `.so`. For example `-lnetcdf`
    for `libnetcdf.a`. The NetCDF-Fortran library should be in the file
    `libnetcdff.a` or `libnetcdff.so`, with two 'f's.
 
-3. Note that the order of options `-l` is usually important: the
+* Note that the order of options `-l` is usually important: the
    NetCDF-Fortran library should be referenced first.
    
-3. The order of options `-L` usually does not matter.
+* The order of options `-L` usually does not matter.
 
 # Usage
 
