@@ -20,28 +20,67 @@ On Ciclad:
 
 ## Installation
 
-`Ml2pl` is written in Fortran 2003 and Bash. So you need a Fortran 2003
-compiler and Bash on your machine. Moreover, you need to have the NetCDF
-library installed, with its Fortran interface. The Fortran interface to
-the NetCDF library must be installed using the same Fortran compiler
-than the one you are going to use for `Ml2pl`.
+Dependencies: `Ml2pl` is written in Fortran 2003 and Bash. So you need
+a Fortran 2003 compiler and Bash on your machine. You must first
+install the libraries
+[NetCDF-C](https://www.unidata.ucar.edu/downloads/netcdf/index.jsp)
+and
+[NetCDF-Fortran](https://www.unidata.ucar.edu/downloads/netcdf/index.jsp).
+Note that NetCDF-Fortran must be installed using the same Fortran
+compiler than the one you are going to use for `Ml2pl`.
 
-1.  [Download the archive](ml2pl_with_lib-tar-gz){.internal-link} with
-    source files. Extract its content:
+### Installation with CMake
 
-        tar xvzf Ml2pl_with_lib-tar-gz
+This is the recommended way.
 
-    and change directory:
+Additional dependency: you must first install
+[CMake](https://cmake.org/download) (version ≥ 3.16).
 
-        cd Ml2pl_with_lib
+2.  Type:
+
+        cd the-Ml2pl-directory-you-downloaded
+        mkdir build
+        cd build
+
+3.  Choose the installation directory `CMAKE_INSTALL_PREFIX` and type
+    the command below with your choice after `-DCMAKE_INSTALL_PREFIX=`
+    (enter an absolute path). For example, you could choose
+    `-DCMAKE_INSTALL_PREFIX=~/.local`. The installation process will
+    install a shell script, `ml2pl.sh`, in
+    `$CMAKE_INSTALL_PREFIX/bin`. It is convenient for
+    `$CMAKE_INSTALL_PREFIX/bin` to be in your `PATH` environment
+    variable.
+
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DFETCH=True -DCMAKE_INSTALL_PREFIX=/wherever
+
+4.  Type:
+
+        make install
+
+Note that the installation process also installs a Fortran executable
+file, `ml2pl`, in `$CMAKE_INSTALL_PREFIX/libexec`. Do not remove this
+file.
+
+### Installation directly with make
+
+This is the (old) less automated way, not recommended.
+
+Additional dependencies: you must first install the libraries
+[NetCDF95](https://www.lmd.jussieu.fr/~lguez/NetCDF95_site/index.html),
+[NR\_util](https://www.lmd.jussieu.fr/~lguez/NR_util_site/index.html),
+[Numer\_Rec\_95](https://gitlab.in2p3.fr/ipsl/lmd/dpao/numer_rec_95)
+and
+[Jumble](https://www.lmd.jussieu.fr/~lguez/Jumble_site/index.html).
+The five Fortran libraries, NetCDF-Fortran, NetCDF95, NR\_util,
+Numer\_Rec\_95 and Jumble, must be compiled with the same compiler.
 
 2.  Decide which Fortran 2003 compiler you want to use. Remember that
-    you need the NetCDF library installed with the chosen compiler. If
-    you have version 4 of the NetCDF library installed then the program
-    `nf-config` should have been installed with the library. (You can
-    also try the command `nc-config` instead.) This program will tell
-    you the compiler you need to use with your NetCDF library. Just
-    type:
+    you need the NetCDF-Fortran library installed with the chosen
+    compiler. If you have version 4 of the NetCDF-Fortran library installed
+    then the program `nf-config` should have been installed with the
+    library. (You can also try the command `nc-config` instead.) This
+    program will tell you the compiler you need to use with your
+    NetCDF-Fortran library. Just type:
 
         nf-config --fc
 
@@ -51,10 +90,10 @@ than the one you are going to use for `Ml2pl`.
 
         export FC=the-output-of-nf-config--fc
 
-3.  If the NetCDF library installed with the chosen compiler is not in
+3.  If the NetCDF-Fortran library installed with the chosen compiler is not in
     standard locations, you should set the variables `NETCDF_INC_DIR`
     and `LDLIBS`. The directory `$NETCDF_INC_DIR` should contain the
-    compiled NetCDF module interfaces (usually `netcdf.mod` and
+    compiled NetCDF-Fortran module interfaces (usually `netcdf.mod` and
     `typesizes.mod`). Note that the program does not need `netcdf.inc`.
     If you have the command `nf-config`, type:
 
@@ -64,9 +103,10 @@ than the one you are going to use for `Ml2pl`.
 
         export NETCDF_INC_DIR=the-output-of-nf-config--includedir
 
-    `LDLIBS` should give the path to the compiled NetCDF libraries and
-    the name of those libraries, in the form required by your compiler.
-    If you have the command `nf-config`, type:
+    `LDLIBS` should give the path to the compiled NetCDF and
+    NetCDF-Fortran libraries and the name of those libraries, in the
+    form required by your compiler.  If you have the command
+    `nf-config`, type:
 
         nf-config --flibs
 
@@ -112,6 +152,7 @@ than the one you are going to use for `Ml2pl`.
 6.  The makefiles are written for GNU make. The command invoking GNU
     make is usually `make` or `gmake`. So, for example, type:
 
+        cd the-Ml2pl-directory-you-downloaded
         make
 
     After compilation, the executable binary file `ml2pl` should be
