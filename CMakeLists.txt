@@ -11,3 +11,8 @@ add_executable(ml2pl ml2pl.f90)
 
 target_link_libraries(ml2pl PRIVATE NetCDF95::netcdf95 Jumble::jumble
   Numer_Rec_95::numer_rec_95 NetCDF_Fortran::netcdff NR_util::nr_util)
+
+include(GNUInstallDirs)
+install(TARGETS ml2pl DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
+configure_file(ml2pl_in.sh ml2pl.sh @ONLY)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ml2pl.sh TYPE BIN)

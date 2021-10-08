@@ -1,5 +1,3 @@
-# This is a template. Replace the ellipses.
-
 #!/bin/bash
 
 # Author: Lionel GUEZ
@@ -14,7 +12,7 @@
 ##set -x
 
 # Absolute path to Fortran executable:
-executable=/.../libexec/ml2pl
+executable=@CMAKE_INSTALL_FULL_LIBEXECDIR@/ml2pl
 
 # Set up the necessary environment:
 ## module purge --silent
