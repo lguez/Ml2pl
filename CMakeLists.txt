@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(Ml2pl LANGUAGES Fortran)
-option(FETCH "Download" OFF)
+option(FETCH "Download")
 
 if(FETCH)
   include(FetchContent)
