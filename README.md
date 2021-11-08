@@ -1,8 +1,14 @@
 # What is it?
 
-The script `ml2pl.sh` interpolates history files of LMDZ (files named
-`hist....nc`) from model levels to pressure levels. Interpolation is
-linear in logarithm of pressure.
+Ml2pl interpolates atmospheric data at model levels to pressure
+levels. Interpolation is linear in logarithm of pressure. Input and
+output are in [NetCDF](https://www.unidata.ucar.edu/software/netcdf)
+format.
+
+Ml2pl was first written to process history files of
+[LMDZ](https://lmdz.lmd.jussieu.fr/) (files named `hist....nc`). It
+also works with atmospheric data from other sources. It is used in
+[Climaf](https://climaf.readthedocs.io/en/latest/index.html).
 
 # Note for the users of French supercomputing centers
 

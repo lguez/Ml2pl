@@ -63,10 +63,7 @@ The target pressure levels should be in a text file called
 line of the file is skipped, assuming it is a title line. Pressure
 levels should be in hPa, in descending order, one value per
 line. There is no constraint on these values nor on the number of
-values.
-
-For further documentation, see:
-http://lmdz.lmd.jussieu.fr/utilisateurs/outils/utilisation-de-lmdz#section-9"
+values."
 
 while getopts hp:v:w:m: name
   do
