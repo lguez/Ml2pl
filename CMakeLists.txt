@@ -24,7 +24,6 @@ else()
   find_package(NR_util REQUIRED CONFIG)
   find_package(Jumble REQUIRED CONFIG)
   find_package(Numer_Rec_95 REQUIRED CONFIG)
-  find_package(NetCDF REQUIRED)
   find_package(NetCDF_Fortran REQUIRED)
 endif()
 
