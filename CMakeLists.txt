@@ -4,6 +4,8 @@ set(CMAKE_BUILD_TYPE Release CACHE STRING
   "Choose the type of build: Debug,Release...")
 
 project(Ml2pl LANGUAGES Fortran)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+find_package(NetCDF_Fortran REQUIRED)
 option(FETCH "Download")
 
 if(FETCH)
@@ -23,12 +25,10 @@ if(FETCH)
 
   FetchContent_MakeAvailable(NR_util Jumble NetCDF95 Numer_Rec_95)
 else()
-  set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
   find_package(NetCDF95 REQUIRED CONFIG)
   find_package(NR_util REQUIRED CONFIG)
   find_package(Jumble REQUIRED CONFIG)
   find_package(Numer_Rec_95 REQUIRED CONFIG)
-  find_package(NetCDF_Fortran REQUIRED)
 endif()
 
 add_executable(ml2pl ml2pl.f90)
