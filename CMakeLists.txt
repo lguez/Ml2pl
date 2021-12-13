@@ -25,10 +25,16 @@ if(FETCH)
 
   FetchContent_MakeAvailable(NR_util Jumble NetCDF95 Numer_Rec_95)
 else()
-  find_package(NetCDF95 REQUIRED CONFIG)
-  find_package(NR_util REQUIRED CONFIG)
-  find_package(Jumble REQUIRED CONFIG)
-  find_package(Numer_Rec_95 REQUIRED CONFIG)
+  foreach(my_package IN ITEMS NetCDF95 NR_util Jumble Numer_Rec_95)
+    find_package(${my_package} CONFIG)
+    
+    if (NOT ${my_package}_FOUND)
+
+      message(FATAL_ERROR
+	"${my_package} not found, consider the option of cmake:-DFETCH=ON")
+
+    endif()
+  endforeach()
 endif()
 
 add_executable(ml2pl ml2pl.f90)
