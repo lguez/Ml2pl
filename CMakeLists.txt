@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
+
+set(CMAKE_BUILD_TYPE Release CACHE STRING
+  "Choose the type of build: Debug,Release...")
+
 project(Ml2pl LANGUAGES Fortran)
 option(FETCH "Download")
 
