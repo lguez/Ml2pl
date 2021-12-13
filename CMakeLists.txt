@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE Release CACHE STRING
   "Choose the type of build: Debug,Release...")
 
 project(Ml2pl LANGUAGES Fortran)
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 find_package(NetCDF_Fortran REQUIRED)
 option(FETCH "Download")
 

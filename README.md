@@ -61,7 +61,7 @@ Additional dependency: you must first install
     `$CMAKE_INSTALL_PREFIX/bin` to be in your `PATH` environment
     variable.
 
-        cmake .. -DFETCH=True -DCMAKE_INSTALL_PREFIX=/wherever
+        cmake .. -DFETCH=ON -DCMAKE_INSTALL_PREFIX=/wherever
 
 4.  Type:
 
