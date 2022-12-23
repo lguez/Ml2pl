@@ -6,6 +6,6 @@
 	    "ml2pl.sh", "-p", "pres", "-v", "temp", 
 	    "$src_dir/Tests/histins.nc", "histins_pl.nc"
 	],
-	"required": ["$src_dir/Tests/press_levels.txt"]
+	"symlink": ["$src_dir/Tests/press_levels.txt"]
     }
 ]
