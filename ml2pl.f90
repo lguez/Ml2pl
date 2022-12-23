@@ -11,9 +11,8 @@ PROGRAM ml2pl
        nf95_put_att, nf95_put_var, find_coord, nf95_inquire_variable
   use netcdf, only: nf90_clobber, nf90_double, nf90_float, nf90_global, &
        nf90_max_name, nf90_nowrite, nf90_unlimited, NF90_FILL_REAL
-  use jumble, only: read_column
+  use jumble, only: read_column, assert
   use numer_rec_95, only: regr1_lint, hunt
-  use nr_util, only: assert
 
   IMPLICIT NONE
 
