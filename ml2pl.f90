@@ -4,7 +4,7 @@ PROGRAM ml2pl
   ! Author: Lionel GUEZ
   ! See general description in the wrapper script.
 
-  use netcdf95, only: handle_err, nf95_close, nf95_copy_att, &
+  use netcdf95, only: nf95_close, nf95_copy_att, &
        nf95_create, nf95_def_dim, nf95_def_var, nf95_enddef, &
        nf95_get_att, nf95_get_var, nf95_gw_var, nf95_inq_dimid, &
        nf95_inq_varid, nf95_inquire_dimension, nf95_open, &
