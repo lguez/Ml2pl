@@ -3,7 +3,6 @@ set(CMAKE_BUILD_TYPE Release CACHE STRING
   "Choose the type of build: Debug,Release...")
 project(Ml2pl LANGUAGES Fortran)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
-find_package(NetCDF_Fortran REQUIRED)
 option(FETCH "Download")
 
 if(FETCH)
@@ -28,7 +27,7 @@ endif()
 
 add_executable(ml2pl ml2pl.f90)
 target_link_libraries(ml2pl PRIVATE NetCDF95::netcdf95 Jumble::jumble
-  Numer_Rec_95::numer_rec_95 NetCDF_Fortran::netcdff)
+  Numer_Rec_95::numer_rec_95)
 include(GNUInstallDirs)
 install(TARGETS ml2pl DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
 configure_file(ml2pl_in.sh ml2pl.sh @ONLY)
