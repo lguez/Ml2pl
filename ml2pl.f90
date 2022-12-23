@@ -8,7 +8,7 @@ PROGRAM ml2pl
        nf95_create, nf95_def_dim, nf95_def_var, nf95_enddef, &
        nf95_get_att, nf95_get_var, nf95_gw_var, nf95_inq_dimid, &
        nf95_inq_varid, nf95_inquire_dimension, nf95_open, &
-       nf95_put_att, nf95_put_var, find_coord, nf95_inquire_variable
+       nf95_put_att, nf95_put_var, nf95_find_coord, nf95_inquire_variable
   use netcdf, only: nf90_clobber, nf90_double, nf90_float, nf90_global, &
        nf90_max_name, nf90_nowrite, nf90_unlimited, NF90_FILL_REAL
   use jumble, only: read_column, assert
@@ -92,11 +92,11 @@ PROGRAM ml2pl
 
   ! Read horizontal coordinates:
 
-  call find_coord(ncid_in, varid=varid, std_name="longitude")
+  call nf95_find_coord(ncid_in, varid=varid, std_name="longitude")
   call nf95_gw_var(ncid_in, varid, rlon)
   iim = size(rlon)
 
-  call find_coord(ncid_in, varid=varid, std_name="latitude")
+  call nf95_find_coord(ncid_in, varid=varid, std_name="latitude")
   call nf95_gw_var(ncid_in, varid, rlat)
   n_lat = size(rlat)
 
@@ -137,7 +137,7 @@ PROGRAM ml2pl
   end if
 
   ! Read time coordinate:
-  call find_coord(ncid_in, varid=varid_t_in, std_name="time")
+  call nf95_find_coord(ncid_in, varid=varid_t_in, std_name="time")
   if (varid_t_in == 0) then
      print *, "ml2pl: could not find a time coordinate"
      stop 1
