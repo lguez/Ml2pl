@@ -77,7 +77,6 @@ This is the (old) less automated way, not recommended.
 
 Additional dependencies: you must first install the libraries
 [NetCDF95](https://www.lmd.jussieu.fr/~lguez/NetCDF95_site/index.html),
-[NR\_util](https://www.lmd.jussieu.fr/~lguez/NR_util_site/index.html),
 [Numer\_Rec\_95](https://gitlab.in2p3.fr/ipsl/lmd/dpao/numer_rec_95)
 and
 [Jumble](https://www.lmd.jussieu.fr/~lguez/Jumble_site/index.html).
@@ -94,9 +93,9 @@ Numer\_Rec\_95 and Jumble, must be compiled with the same compiler.
    
 3. If necessary, add or modify options `-L` in the variable LDLIBS in
    GNUmakefile. The options `-L` should give the path to the library
-   files of the five Fortran libraries: `libnetcdff.a`,
-   `libnetcdf95.a`, `libnr_util.a`, `libnumer_rec_95.a` and
-   `libjumble.a` (or the dynamic libraries with a `.so` suffix).
+   files of the four Fortran libraries: `libnetcdff.a`,
+   `libnetcdf95.a`, `libnumer_rec_95.a` and `libjumble.a` (or the
+   dynamic libraries with a `.so` suffix).
 	
 6.  The makefile is written for GNU make. The command invoking GNU
     make is usually `make` or `gmake`. So, for example, type:
