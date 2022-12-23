@@ -8,9 +8,9 @@ PROGRAM ml2pl
        nf95_create, nf95_def_dim, nf95_def_var, nf95_enddef, &
        nf95_get_att, nf95_get_var, nf95_gw_var, nf95_inq_dimid, &
        nf95_inq_varid, nf95_inquire_dimension, nf95_open, &
-       nf95_put_att, nf95_put_var, nf95_find_coord, nf95_inquire_variable
-  use netcdf, only: nf90_clobber, nf90_double, nf90_float, nf90_global, &
-       nf90_max_name, nf90_nowrite, nf90_unlimited, NF90_FILL_REAL
+       nf95_put_att, nf95_put_var, nf95_find_coord, nf95_inquire_variable, &
+       nf95_clobber, nf95_double, nf95_float, nf95_global, &
+       nf95_max_name, nf95_nowrite, nf95_unlimited, NF95_FILL_REAL
   use jumble, only: read_column, assert
   use numer_rec_95, only: regr1_lint, hunt
 
@@ -51,7 +51,7 @@ PROGRAM ml2pl
   integer, allocatable:: varid_out(:) ! (n_var)
   ! IDs in the output NetCDF file of the interpolated variables
 
-  CHARACTER(len=nf90_max_name), allocatable:: varpossib(:) ! (n_var)
+  CHARACTER(len=nf95_max_name), allocatable:: varpossib(:) ! (n_var)
   ! names of the NetCDF variables we want to interpolate
 
   integer nv, nw
@@ -60,7 +60,7 @@ PROGRAM ml2pl
   ! surface. Variable are in the order: extrapolated, set to 0, set to
   ! missing, in "varpossib".
 
-  CHARACTER(len=nf90_max_name) pressure_var
+  CHARACTER(len=nf95_max_name) pressure_var
 
   REAL, allocatable:: var_ml(:, :, :, :) ! (iim, n_lat, llm, n_var)
   ! variables at model levels
@@ -88,7 +88,7 @@ PROGRAM ml2pl
 
   read *, nv, nw, pressure_var
 
-  call nf95_open("input_file_ml2pl.nc", nf90_nowrite, ncid_in)
+  call nf95_open("input_file_ml2pl.nc", nf95_nowrite, ncid_in)
 
   ! Read horizontal coordinates:
 
@@ -145,28 +145,28 @@ PROGRAM ml2pl
   call nf95_gw_var(ncid_in, varid_t_in, time)
   ntim = size(time)
 
-  call nf95_create("output_file_ml2pl.nc", nf90_clobber, ncid_out)
+  call nf95_create("output_file_ml2pl.nc", nf95_clobber, ncid_out)
 
-  call nf95_put_att(ncid_out, nf90_global, 'comment', &
+  call nf95_put_att(ncid_out, nf95_global, 'comment', &
        'interpolated to pressure levels')
   call nf95_def_dim(ncid_out, 'longitude', iim, dim_x)
   call nf95_def_dim(ncid_out, 'latitude', n_lat, dim_y)
   call nf95_def_dim(ncid_out, 'plev', n_plev, dim_z)
-  call nf95_def_dim(ncid_out, 'time', nf90_unlimited, dim_t)
+  call nf95_def_dim(ncid_out, 'time', nf95_unlimited, dim_t)
 
-  call nf95_def_var(ncid_out, 'longitude', nf90_float, dim_x, varid_x)
+  call nf95_def_var(ncid_out, 'longitude', nf95_float, dim_x, varid_x)
   call nf95_put_att(ncid_out, varid_x, 'standard_name', 'longitude')
   call nf95_put_att(ncid_out, varid_x, 'units', 'degrees_east')
 
-  call nf95_def_var(ncid_out, 'latitude', nf90_float, dim_y, varid_y)
+  call nf95_def_var(ncid_out, 'latitude', nf95_float, dim_y, varid_y)
   call nf95_put_att(ncid_out, varid_y, 'standard_name', 'latitude')
   call nf95_put_att(ncid_out, varid_y, 'units', 'degrees_north')
 
-  call nf95_def_var(ncid_out, 'plev', nf90_float, dim_z, varid_z)
+  call nf95_def_var(ncid_out, 'plev', nf95_float, dim_z, varid_z)
   call nf95_put_att(ncid_out, varid_z, 'standard_name', 'air_pressure')
   call nf95_put_att(ncid_out, varid_z, 'units', 'hPa')
 
-  call nf95_def_var(ncid_out, 'time', nf90_double, dim_t, varid_t)
+  call nf95_def_var(ncid_out, 'time', nf95_double, dim_t, varid_t)
   call nf95_put_att(ncid_out, varid_t, 'standard_name', 'time')
   call nf95_copy_att(ncid_in, varid_t_in, 'units', ncid_out, varid_t)
   call nf95_copy_att(ncid_in, varid_t_in, 'calendar', ncid_out, varid_t)
@@ -174,11 +174,11 @@ PROGRAM ml2pl
   ! Create interpolated variables:
   allocate(varid_out(n_var))
   do n = 1, n_var
-     call nf95_def_var(ncid_out, trim(varpossib(n)), nf90_float, &
+     call nf95_def_var(ncid_out, trim(varpossib(n)), nf95_float, &
           (/dim_x, dim_y, dim_z, dim_t/), varid_out(n))
      call nf95_copy_att(ncid_in, varid_in(n), 'units', ncid_out, &
           varid_out(n), ncerr)
-     call nf95_put_att(ncid_out, varid_out(n), "_FillValue", NF90_FILL_REAL)
+     call nf95_put_att(ncid_out, varid_out(n), "_FillValue", NF95_FILL_REAL)
   end do
 
   call nf95_enddef(ncid_out)
@@ -235,7 +235,7 @@ PROGRAM ml2pl
               ! {plev(surf_loc + 1) <= pres(i, j, 1) <=  plev(surf_loc)}
 
               var_pl(i, j, :surf_loc, nv + 1: nv + nw) = 0.
-              var_pl(i, j, :surf_loc, nv + nw + 1:) = NF90_FILL_REAL
+              var_pl(i, j, :surf_loc, nv + nw + 1:) = NF95_FILL_REAL
 
               var_pl(i, j, surf_loc + 1:, nv + 1:) &
                    = regr1_lint(var_ml(i, j, :, nv + 1:), &
