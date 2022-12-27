@@ -73,9 +73,27 @@ with the same Fortran compiler than the one you want to use for
 
         make install
 
-Note that the installation process also installs a Fortran executable
-file, `ml2pl`, in `$CMAKE_INSTALL_PREFIX/libexec`. Do not remove this
-file.
+You do not need to keep the downloaded directory Ml2pl after
+installation. Note that the installation process also installs a
+Fortran executable file, `ml2pl`, in
+`$CMAKE_INSTALL_PREFIX/libexec`. Do not remove this file.
+
+## Advanced instructions
+
+1. You can choose any name and any location for the build directory. You
+have to refer to the source directory when you run cmake from the
+build directory:
+
+```
+mkdir /wherever/any/name
+cd /wherever/any/name
+cmake /where/I/downloaded/Ml2pl -DFETCH=ON -DCMAKE_INSTALL_PREFIX=~/.local
+```
+
+2. The option `-DFETCH=ON` instructs CMake to download, compile and
+   install the libraries Jumble, NetCDF95 and `Numer_Rec_95`. If you
+   have already installed these libraries, you can omit the FETCH
+   option.
 
 ## Troubleshooting
 
