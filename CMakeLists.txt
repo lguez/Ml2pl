@@ -12,7 +12,8 @@ if(FETCH)
   FetchContent_Declare(NetCDF95 GIT_REPOSITORY
     https://github.com/lguez/NetCDF95.git)
   FetchContent_Declare(Numer_Rec_95 GIT_REPOSITORY
-    https://gitlab.in2p3.fr/guez/Numer_Rec_95.git)
+    https://gitlab.in2p3.fr/guez/Numer_Rec_95.git TLS_VERIFY false
+    GIT_CONFIG http.sslVerify=false)
   FetchContent_MakeAvailable(Jumble NetCDF95 Numer_Rec_95)
 else()
   foreach(my_package IN ITEMS NetCDF95 Jumble Numer_Rec_95)
