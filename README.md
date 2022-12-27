@@ -32,7 +32,7 @@ On spirit:
 
 ## Dependencies
 
-- `Ml2pl` is written in Fortran 2003 and Bash so you need a Fortran 2003
+- `Ml2pl` is written in Fortran (2003) and Bash so you need a Fortran
 compiler and Bash on your machine.
 
 - Install the library
@@ -62,14 +62,12 @@ with the same Fortran compiler than the one you want to use for
 
 3.  Choose the installation directory `CMAKE_INSTALL_PREFIX` and type
     the command below with your choice after `-DCMAKE_INSTALL_PREFIX=`
-    (enter an absolute path). For example, you could choose
-    `-DCMAKE_INSTALL_PREFIX=~/.local`. The installation process will
-    install a shell script, `ml2pl.sh`, in
-    `$CMAKE_INSTALL_PREFIX/bin`. It is convenient for
-    `$CMAKE_INSTALL_PREFIX/bin` to be in your `PATH` environment
-    variable.
+    (enter an absolute path). The installation process will install a
+    shell script, `ml2pl.sh`, in `$CMAKE_INSTALL_PREFIX/bin`. It is
+    convenient for `$CMAKE_INSTALL_PREFIX/bin` to be in your `PATH`
+    environment variable. For example:
 
-        cmake .. -DFETCH=ON -DCMAKE_INSTALL_PREFIX=/wherever
+        cmake .. -DFETCH=ON -DCMAKE_INSTALL_PREFIX=~/.local
 
 4.  Type:
 
