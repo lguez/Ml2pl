@@ -61,9 +61,8 @@ pressure file.
 The target pressure levels should be in a text file called
 \"press_levels.txt\" in the current directory at run-time. The first
 line of the file is skipped, assuming it is a title line. Pressure
-levels should be in hPa, in descending order, one value per
-line. There is no constraint on these values nor on the number of
-values."
+levels should be in hPa, in any order, one value per line. There is no
+constraint on these values nor on the number of values."
 
 while getopts hp:v:w:m: name
   do

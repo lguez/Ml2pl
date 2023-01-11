@@ -4,13 +4,13 @@ PROGRAM ml2pl
   ! Author: Lionel GUEZ
   ! See general description in the wrapper script.
 
+  use jumble, only: read_column, assert
   use netcdf95, only: nf95_close, nf95_copy_att, nf95_create, nf95_def_dim, &
        nf95_def_var, nf95_enddef, nf95_get_att, nf95_get_var, nf95_gw_var, &
        nf95_inq_dimid, nf95_inq_varid, nf95_inquire_dimension, nf95_open, &
        nf95_put_att, nf95_put_var, nf95_find_coord, nf95_inquire_variable, &
        nf95_clobber, nf95_double, nf95_float, nf95_global, nf95_max_name, &
        nf95_nowrite, nf95_unlimited, NF95_FILL_REAL
-  use jumble, only: read_column, assert
   use numer_rec_95, only: regr1_lint, hunt, sort
 
   IMPLICIT NONE

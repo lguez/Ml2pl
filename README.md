@@ -49,9 +49,9 @@ with the same Fortran compiler than the one you want to use for
     the Git repository contains a submodule, the easiest way is to
     type:
 
-		git clone --recurse-submodules https://github.com/lguez/Ml2pl.git
+	git clone --recurse-submodules https://github.com/lguez/Ml2pl.git
 
-	If you prefer to download a ZIP file then you will also have to
+    If you prefer to download a ZIP file then you will also have to
     download the [cmake subdirectory](https://github.com/lguez/cmake).
 
 2.  Create a build subdirectory in the directory you have just downloaded:
@@ -91,7 +91,10 @@ cmake /where/I/downloaded/Ml2pl -DFETCH=ON -DCMAKE_INSTALL_PREFIX=~/.local
 ```
 
 2. The option `-DFETCH=ON` instructs CMake to download, compile and
-   install the libraries Jumble, NetCDF95 and `Numer_Rec_95`. If you
+   install the libraries
+   [Jumble](https://web.lmd.jussieu.fr/~lguez/Jumble_site/index.html),
+   [NetCDF95](https://lguez.github.io/NetCDF95) and
+   [`Numer_Rec_95`](https://gitlab.in2p3.fr/guez/Numer_Rec_95). If you
    have already installed these libraries, you can omit the FETCH
    option.
 
@@ -150,7 +153,7 @@ Running the command with argument `-h` will produce a help message:
     The target pressure levels should be in a text file called
     "press_levels.txt" in the current directory at run-time. The first
     line of the file is skipped, assuming it is a title line. Pressure
-    levels should be in hPa, in descending order, one value per
+    levels should be in hPa, in any order, one value per
     line. There is no constraint on these values nor on the number of
     values.
 
