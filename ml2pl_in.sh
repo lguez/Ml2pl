@@ -182,7 +182,7 @@ set $variable_list_v $variable_list_w $variable_list_m
 for my_var in $*
   do
   echo $my_var
-done >variable_list_ml2pl
+done >variable_list_ml2pl.txt
 
 # Run the Fortran program:
 $executable <<EOF
@@ -202,4 +202,4 @@ ncks --history --append --exclude input_file_ml2pl.nc $output_file >/dev/null \
 # coordinate variables and an info about filetype.)
 
 # Clean up:
-rm input_file_ml2pl.nc variable_list_ml2pl
+rm input_file_ml2pl.nc variable_list_ml2pl.txt

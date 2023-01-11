@@ -75,7 +75,7 @@ PROGRAM ml2pl
   !---------------------------------------------------------------------
 
   ! Read the names of the variables:
-  call read_column(varpossib, "variable_list_ml2pl")
+  call read_column(varpossib, "variable_list_ml2pl.txt")
   n_var =size(varpossib)
 
   ! Read target pressure levels:
