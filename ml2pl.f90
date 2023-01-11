@@ -11,7 +11,7 @@ PROGRAM ml2pl
        nf95_clobber, nf95_double, nf95_float, nf95_global, nf95_max_name, &
        nf95_nowrite, nf95_unlimited, NF95_FILL_REAL
   use jumble, only: read_column, assert
-  use numer_rec_95, only: regr1_lint, hunt
+  use numer_rec_95, only: regr1_lint, hunt, sort
 
   IMPLICIT NONE
 
@@ -81,9 +81,8 @@ PROGRAM ml2pl
   ! Read target pressure levels:
   call read_column(plev, "press_levels.txt", first=2)
   n_plev = size(plev)
-  ! Quick check:
-  if (n_plev >= 2) &
-       call assert(plev(1) > plev(2), "plev should be in descending order")
+  call sort(plev)
+  plev = plev(n_plev:1:- 1) ! sort in descending order
 
   read *, nv, nw, pressure_var
 
