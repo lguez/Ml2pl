@@ -83,6 +83,8 @@ PROGRAM ml2pl
   n_plev = size(plev)
   call sort(plev)
   plev = plev(n_plev:1:- 1) ! sort in descending order
+  call assert(all(plev(:n_plev - 1) /= plev(2:)), &
+       "Pressure levels should be distinct")
 
   read *, nv, nw, pressure_var
 
