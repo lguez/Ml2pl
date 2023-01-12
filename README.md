@@ -125,14 +125,14 @@ Running the command with argument `-h` will produce a help message:
        -p variable              : name of 4-dimensional variable in the input file
                                   or the pressure file containing the
                                   pressure field at model levels
-       -v variable[,variable...]: names of variables you want to interpolate, 
-                                  and possibly extrapolate if target pressure 
+       -v variable[,variable...]: names of variables you want to interpolate,
+                                  and possibly extrapolate if target pressure
                                   level is below surface
-       -w variable[,variable...]: names of variables you want to interpolate, 
+       -w variable[,variable...]: names of variables you want to interpolate,
                                   or set to 0 if target pressure level is below
                                   surface
-       -m variable[,variable...]: names of variables you want to interpolate, 
-                                  or set to missing if target pressure level is 
+       -m variable[,variable...]: names of variables you want to interpolate,
+                                  or set to missing if target pressure level is
                                   below surface
 
     input-file, output-file and pressure-file are NetCDF files.
