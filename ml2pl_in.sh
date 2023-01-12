@@ -24,9 +24,7 @@ executable=@CMAKE_INSTALL_FULL_LIBEXECDIR@/ml2pl
 USAGE="usage: ml2pl.sh [OPTION]... input-file output-file [pressure-file]
 
 Interpolates NetCDF variables from model levels to pressure
-levels. The interpolation is linear in logarithm of pressure. The
-input variables depend on longitude, latitude, vertical level and
-time. There is no constraint on the dimensions.
+levels.
 
 Options:
    -h                       : this help message
@@ -43,26 +41,7 @@ Options:
                               or set to missing if target pressure level is 
                               below surface
 
-input-file, output-file and pressure-file are NetCDF files.
-
-You must list the variables you want to interpolate, each variable
-listed after either -v, -w or -m. There must be at least one variable
-listed, following either -v, -w or -m.
-
-The pressure field at model levels can be specified in input-file or
-pressure-file either through hybrid coefficients and surface pressure
-or directly from 4-dimensional pressure. In both cases, pressure must
-be given in Pa and decrease when the index of model level
-increases. This is checked quickly in the program. If option -p is not
-used then the program will look for \"ap\", \"bp\" (hybrid
-coefficients) and \"ps\" (surface pressure) in the input file or the
-pressure file.
-
-The target pressure levels should be in a text file called
-\"press_levels.txt\" in the current directory at run-time. The first
-line of the file is skipped, assuming it is a title line. Pressure
-levels should be in hPa, in any order, one value per line. There is no
-constraint on these values nor on the number of values."
+For further information, see https://github.com/lguez/Ml2pl."
 
 while getopts hp:v:w:m: name
   do
