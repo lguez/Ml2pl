@@ -3,7 +3,7 @@
 	"title": "Test_ml2pl",
 	"command":
 	[
-	    "$install_dir/ml2pl.sh", "-p", "pres", "-v", "temp",
+	    "$install_dir/bin/ml2pl.sh", "-p", "pres", "-v", "temp",
 	    "$src_dir/Tests/histins.nc", "histins_pl.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
