@@ -141,7 +141,8 @@ input-file, output-file and pressure-file are NetCDF files.
 
 You must list the variables you want to interpolate, each variable
 listed after either `-v`, `-w` or `-m`. There must be at least one variable
-listed, following either `-v`, `-w` or `-m`.
+listed, following either `-v`, `-w` or `-m`. In the same command, you
+can have several options `-v`, `-w` or `-m` with associated variables.
 
 The pressure field at model levels can be specified in input-file or
 pressure-file either through hybrid coefficients and surface pressure
