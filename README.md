@@ -161,5 +161,4 @@ levels should be in hPa, in any order, one value per line. There
 should be at least one target pressure level. There is no other
 constraint on these values nor on the number of values.
 
-There is [an example for file
-`press_levels.txt`](Tests/press_levels.txt) in directory Tests.
+There is [an example for file `press_levels.txt`](press_levels.txt).
