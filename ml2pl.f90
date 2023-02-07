@@ -82,6 +82,7 @@ PROGRAM ml2pl
   ! Read target pressure levels:
   call read_column(plev, "press_levels.txt", first=2)
   n_plev = size(plev)
+  call assert(n_plev >= 1, "ml2pl: no value found in press_levels.txt")
   call sort(plev)
   plev = plev(n_plev:1:- 1) ! sort in descending order
   call assert(all(plev(:n_plev - 1) /= plev(2:)), &
