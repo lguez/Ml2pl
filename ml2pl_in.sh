@@ -32,8 +32,8 @@ Options:
                               or in the pressure file containing the
                               pressure field at model levels
    -v variable[,variable...]: names of variables you want to interpolate, 
-                              and possibly extrapolate if target pressure 
-                              level is below surface
+                              or extrapolate if target pressure level is below
+                              surface
    -w variable[,variable...]: names of variables you want to interpolate, 
                               or set to 0 if target pressure level is below
                               surface
