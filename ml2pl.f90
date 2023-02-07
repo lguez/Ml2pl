@@ -21,7 +21,7 @@ PROGRAM ml2pl
   INTEGER n_plev ! nombre de niveaux de pression en sortie
 
   REAL, allocatable:: pres(:, :, :) ! (iim, n_lat, llm)
-  ! input pressure field, in hPa 
+  ! input pressure field at model levels, in hPa
 
   REAL, allocatable:: ap(:) ! (llm)
   REAL, allocatable:: b(:) ! (llm)
@@ -29,7 +29,7 @@ PROGRAM ml2pl
 
   character(len=10) units
 
-  logical hybrid ! pressure is given through ap, b and ps 
+  logical hybrid ! pressure is given through ap, b and ps
 
   REAL, allocatable:: rlon(:) ! (iim)
   REAL, allocatable:: rlat(:) ! (n_lat)
@@ -148,7 +148,7 @@ PROGRAM ml2pl
   call nf95_create("output_file_ml2pl.nc", nf95_clobber, ncid_out)
 
   call nf95_put_att(ncid_out, nf95_global, 'comment', &
-       'interpolated to pressure levels')
+       'interpolated to pressure levels by ml2pl')
   call nf95_def_dim(ncid_out, 'longitude', iim, dim_x)
   call nf95_def_dim(ncid_out, 'latitude', n_lat, dim_y)
   call nf95_def_dim(ncid_out, 'plev', n_plev, dim_z)
