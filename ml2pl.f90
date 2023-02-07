@@ -21,7 +21,8 @@ PROGRAM ml2pl
   INTEGER n_plev ! nombre de niveaux de pression en sortie
 
   REAL, allocatable:: pres(:, :, :) ! (iim, n_lat, llm)
-  ! input pressure field at model levels, in hPa
+  ! Input pressure field at model levels, in hPa. Should decrease with
+  ! increasing level index.
 
   REAL, allocatable:: ap(:) ! (llm)
   REAL, allocatable:: b(:) ! (llm)

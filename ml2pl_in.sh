@@ -41,6 +41,7 @@ Options:
                               or set to missing if target pressure level is 
                               below surface
 
+The target pressure levels should be in a file called \"press_levels.txt\".
 For further information, see https://github.com/lguez/Ml2pl."
 
 while getopts hp:v:w:m: name
