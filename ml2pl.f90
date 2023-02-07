@@ -236,8 +236,13 @@ PROGRAM ml2pl
 
         do j = 1, n_lat
            do i = 1, iim
-              call hunt(plev, pres(i, j, 1), surf_loc)
-              ! {plev(surf_loc + 1) <= pres(i, j, 1) <=  plev(surf_loc)}
+              if (n_plev >= 2) then
+                 call hunt(plev, pres(i, j, 1), surf_loc)
+                 ! {plev(surf_loc + 1) <= pres(i, j, 1) <=  plev(surf_loc)}
+              else
+                 ! n_plev == 1
+                 surf_loc = merge(0, 1, plev(1) <= pres(i, j, 1))
+              end if
 
               var_pl(i, j, :surf_loc, nv + 1: nv + nw) = 0.
               var_pl(i, j, :surf_loc, nv + nw + 1:) = NF95_FILL_REAL
