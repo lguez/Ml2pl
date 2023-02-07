@@ -59,7 +59,7 @@ PROGRAM ml2pl
   ! surface. Variable are in the order: extrapolated, set to 0, set to
   ! missing, in "varpossib".
 
-  CHARACTER(len=nf95_max_name) pressure_var
+  CHARACTER(len=nf95_max_name) pressure_var, lon_name, lat_name, time_name
 
   REAL, allocatable:: var_ml(:, :, :, :) ! (iim, n_lat, llm, n_var)
   ! variables at model levels
@@ -92,11 +92,13 @@ PROGRAM ml2pl
 
   ! Read horizontal coordinates:
 
-  call nf95_find_coord(ncid_in, varid=varid, std_name="longitude")
+  call nf95_find_coord(ncid_in, varid=varid, std_name="longitude", &
+       name = lon_name)
   call nf95_gw_var(ncid_in, varid, rlon)
   iim = size(rlon)
 
-  call nf95_find_coord(ncid_in, varid=varid, std_name="latitude")
+  call nf95_find_coord(ncid_in, varid=varid, std_name="latitude", &
+       name = lat_name)
   call nf95_gw_var(ncid_in, varid, rlat)
   n_lat = size(rlat)
 
@@ -137,7 +139,8 @@ PROGRAM ml2pl
   end if
 
   ! Read time coordinate:
-  call nf95_find_coord(ncid_in, varid=varid_t_in, std_name="time")
+  call nf95_find_coord(ncid_in, varid=varid_t_in, std_name="time", &
+       name = time_name)
   if (varid_t_in == 0) then
      print *, "ml2pl: could not find a time coordinate"
      stop 1
@@ -149,16 +152,16 @@ PROGRAM ml2pl
 
   call nf95_put_att(ncid_out, nf95_global, 'comment', &
        'interpolated to pressure levels by ml2pl')
-  call nf95_def_dim(ncid_out, 'longitude', iim, dim_x)
-  call nf95_def_dim(ncid_out, 'latitude', n_lat, dim_y)
+  call nf95_def_dim(ncid_out, lon_name, iim, dim_x)
+  call nf95_def_dim(ncid_out, lat_name, n_lat, dim_y)
   call nf95_def_dim(ncid_out, 'plev', n_plev, dim_z)
-  call nf95_def_dim(ncid_out, 'time', nf95_unlimited, dim_t)
+  call nf95_def_dim(ncid_out, time_name, nf95_unlimited, dim_t)
 
-  call nf95_def_var(ncid_out, 'longitude', nf95_float, dim_x, varid_x)
+  call nf95_def_var(ncid_out, lon_name, nf95_float, dim_x, varid_x)
   call nf95_put_att(ncid_out, varid_x, 'standard_name', 'longitude')
   call nf95_put_att(ncid_out, varid_x, 'units', 'degrees_east')
 
-  call nf95_def_var(ncid_out, 'latitude', nf95_float, dim_y, varid_y)
+  call nf95_def_var(ncid_out, lat_name, nf95_float, dim_y, varid_y)
   call nf95_put_att(ncid_out, varid_y, 'standard_name', 'latitude')
   call nf95_put_att(ncid_out, varid_y, 'units', 'degrees_north')
 
@@ -166,7 +169,7 @@ PROGRAM ml2pl
   call nf95_put_att(ncid_out, varid_z, 'standard_name', 'air_pressure')
   call nf95_put_att(ncid_out, varid_z, 'units', 'hPa')
 
-  call nf95_def_var(ncid_out, 'time', nf95_double, dim_t, varid_t)
+  call nf95_def_var(ncid_out, time_name, nf95_double, dim_t, varid_t)
   call nf95_put_att(ncid_out, varid_t, 'standard_name', 'time')
   call nf95_copy_att(ncid_in, varid_t_in, 'units', ncid_out, varid_t)
   call nf95_copy_att(ncid_in, varid_t_in, 'calendar', ncid_out, varid_t)
