@@ -1,6 +1,6 @@
-[
+{
+    "Test_ml2pl":
     {
-	"title": "Test_ml2pl",
 	"command":
 	[
 	    "$install_dir/bin/ml2pl.sh", "-p", "pres", "-v", "temp",
@@ -8,8 +8,8 @@
 	],
 	"symlink": ["$src_dir/press_levels.txt"]
     },
+    "1_target_level":
     {
-	"title": "1_target_level",
 	"description": "Single target pressure level.",
 	"command":
 	[
@@ -18,4 +18,4 @@
 	],
 	"create_file": ["press_levels.txt", "p, in hPa\n925\n"]
     }
-]
+}
