@@ -150,9 +150,10 @@ The pressure field at model levels can be specified in input-file or
 pressure-file either through hybrid coefficients and surface pressure
 or directly from 4-dimensional pressure. In both cases, pressure must
 be given in Pa and decrease when the index of model level
-increases. This is checked quickly in the program. If option `-p` is not
-used then the program will look for `ap`, `bp` (hybrid coefficients)
-and `ps` (surface pressure) in the input file or the pressure file.
+increases. This is checked quickly in the program. If option `-p` is
+not used then the program will look for `ap`, `b` (hybrid
+coefficients) and `ps` (surface pressure) in the input file or the
+pressure file.
 
 The target pressure levels should be in a text file called
 `press_levels.txt` in the current directory at run-time. The first
