@@ -16,9 +16,9 @@ executable=@CMAKE_INSTALL_FULL_LIBEXECDIR@/ml2pl
 
 # Set up the necessary environment:
 ## module purge --silent
+## module load intel... --silent
 ## module load netcdf... --silent
 ## module load nco... --silent
-## module load intel... --silent
 ## export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:...NetCDF...
 
 USAGE="usage: ml2pl.sh [OPTION]... input-file output-file [pressure-file]
