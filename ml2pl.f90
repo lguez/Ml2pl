@@ -4,6 +4,8 @@ PROGRAM ml2pl
   ! Author: Lionel GUEZ
   ! See general description in the wrapper script.
 
+  ! pres, ap, ps and plev are in the same unit.
+
   use jumble, only: read_column, assert
   use netcdf95, only: nf95_close, nf95_copy_att, nf95_create, nf95_def_dim, &
        nf95_def_var, nf95_enddef, nf95_get_att, nf95_get_var, nf95_gw_var, &
@@ -20,13 +22,13 @@ PROGRAM ml2pl
 
   INTEGER n_plev ! nombre de niveaux de pression en sortie
 
-  REAL, allocatable:: pres(:, :, :) ! (n_lon, n_lat, llm)
-  ! Input pressure field at model levels, in hPa. Should decrease with
-  ! increasing level index.
+  REAL, allocatable:: pres(:, :, :) ! (n_lon, n_lat, llm) Input
+  ! pressure field at model levels. Should decrease with increasing
+  ! level index.
 
   REAL, allocatable:: ap(:) ! (llm)
   REAL, allocatable:: b(:) ! (llm)
-  REAL, allocatable:: ps(:, :) ! (n_lon, n_lat) surface pressure field, in hPa
+  REAL, allocatable:: ps(:, :) ! (n_lon, n_lat) surface pressure field
 
   character(len=10) units
 
@@ -71,7 +73,7 @@ PROGRAM ml2pl
   integer surf_loc ! location of surface in target pressure levels
 
   REAL, allocatable:: plev(:) ! (n_plev)
-  ! target pressure levels, in hPa, in descending order
+  ! target pressure levels, in descending order
 
   !---------------------------------------------------------------------
 
@@ -122,11 +124,9 @@ PROGRAM ml2pl
 
      call nf95_inq_varid(ncid_in, 'ps', varid_p)
      call nf95_get_att(ncid_in, varid_p, "units", units)
-     call assert(units == "Pa", "ps should be in Pa")
 
      call nf95_inq_varid(ncid_in, 'ap', varid)
      call nf95_get_var(ncid_in, varid, ap)
-     ap = ap / 100. ! convert from Pa to hPa
 
      call nf95_inq_varid(ncid_in, 'b', varid)
      call nf95_get_var(ncid_in, varid, b)
@@ -136,7 +136,6 @@ PROGRAM ml2pl
           '" for the input pressure field...'
      call nf95_inq_varid(ncid_in, trim(pressure_var), varid_p)
      call nf95_get_att(ncid_in, varid_p, "units", units)
-     call assert(units == "Pa", trim(pressure_var) // " should be in Pa")
   end if
 
   ! Read time coordinate:
@@ -168,7 +167,7 @@ PROGRAM ml2pl
 
   call nf95_def_var(ncid_out, 'plev', nf95_float, dim_z, varid_z)
   call nf95_put_att(ncid_out, varid_z, 'standard_name', 'air_pressure')
-  call nf95_put_att(ncid_out, varid_z, 'units', 'hPa')
+  call nf95_put_att(ncid_out, varid_z, 'units', trim(units))
 
   call nf95_def_var(ncid_out, time_name, nf95_double, dim_t, varid_t)
   call nf95_put_att(ncid_out, varid_t, 'standard_name', 'time')
@@ -202,12 +201,9 @@ PROGRAM ml2pl
   DO l = 1, ntim
      if (hybrid) then
         call nf95_get_var(ncid_in, varid_p, ps, start=(/1, 1, l/))
-        ps = ps / 100. ! convert from Pa to hPa
-
         forall (k = 1:llm) pres(:, :, k) = ap(k) + b(k) * ps
      else
         call nf95_get_var(ncid_in, varid_p, pres, start=(/1, 1, 1, l/))
-        pres = pres / 100. ! convert from Pa to hPa
      end if
 
      ! Quick check:
