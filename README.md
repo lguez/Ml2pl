@@ -1,9 +1,8 @@
 # What is it?
 
 Ml2pl interpolates atmospheric data at model levels to pressure
-levels. Interpolation is linear in logarithm of pressure. Input and
-output are in [NetCDF](https://www.unidata.ucar.edu/software/netcdf)
-format.
+levels. Input and output are in
+[NetCDF](https://www.unidata.ucar.edu/software/netcdf) format.
 
 Ml2pl was first written to process history files of
 [LMDZ](https://lmdz.lmd.jussieu.fr/) (files named `hist....nc`). It
@@ -139,6 +138,8 @@ The interpolation is linear in logarithm of pressure. The input
 variables depend on longitude, latitude, vertical level and
 time. There is no constraint on the dimensions.
 
+All computations are done with single-precision real numbers.
+
 input-file, output-file and pressure-file are NetCDF files.
 
 You must list the variables you want to interpolate, each variable
@@ -163,3 +164,18 @@ should be at least one target pressure level. There is no other
 constraint on these values nor on the number of values.
 
 There is [an example for file `press_levels.txt`](press_levels.txt).
+
+## Main memory
+
+The program loops on time index and does not use four-dimensional
+(space plus time) variables. So the main memory used depends on
+spatial resolution of the fields but not on the number of dates.
+
+If $n_\mathrm{lon}$ is the number of longitudes, $n_\mathrm{lat}$ the
+number of latitudes, $n_\mathrm{mod}$ the number of model levels,
+$n_\mathrm{var}$ the number of variables to interpolate and
+$n_\mathrm{plev}$ the number of target pressure levels, the amount of
+main memory used should be approximately :
+$$n_\mathrm{lon} n_\mathrm{lat} [n_\mathrm{mod} (n_\mathrm{var} +
+1) + n_\mathrm{plev} n_\mathrm{var}] \times 4 B$$
+(B is for bytes).
