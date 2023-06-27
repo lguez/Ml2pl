@@ -178,18 +178,20 @@ can have several options `-v`, `-w` or `-m` with associated variables.
 The pressure field at model levels can be specified in input-file or
 pressure-file either through hybrid coefficients and surface pressure
 or directly from 4-dimensional pressure. In both cases, pressure must
-be given in Pa and decrease when the index of model level
-increases. This is checked quickly in the program. If option `-p` is
-not used then the program will look for `ap`, `b` (hybrid
-coefficients) and `ps` (surface pressure) in the input file or the
-pressure file.
+decrease when the index of model level increases. This is checked
+quickly in the program. If option `-p` is not used then the program
+will look for `ap`, `b` (hybrid coefficients) and `ps` (surface
+pressure) in the input file or the pressure file.
 
 The target pressure levels should be in a text file called
 `press_levels.txt` in the current directory at run-time. The first
-line of the file is skipped, assuming it is a title line. Pressure
-levels should be in hPa, in any order, one value per line. There
-should be at least one target pressure level. There is no other
-constraint on these values nor on the number of values.
+line of the file is skipped, assuming it is a title line. Target
+pressure levels should be in the same unit as input pressure at model
+levels, as given by the 4-dimensional pressure or hybrid coefficients
+and surface pressure. Target pressure levels can be in any order, one
+value per line. There should be at least one target pressure
+level. There is no other constraint on these values nor on the number
+of values.
 
 There is [an example for file `press_levels.txt`](press_levels.txt).
 
