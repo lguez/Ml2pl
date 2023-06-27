@@ -31,38 +31,45 @@ On spirit:
 
 ## Dependencies
 
-- [CMake](https://cmake.org/download) (version ≥ 3.16).
+- [CMake](https://cmake.org/download) (version &ge; 3.16)[^1].
 
-- The [NetCDF C
-  library](https://docs.unidata.ucar.edu/nug/current/getting_and_building_netcdf.html).
+- The [NetCDF-C
+  library](https://docs.unidata.ucar.edu/nug/current/getting_and_building_netcdf.html)
+  (version &ge; 4.6).
 
 - The [NetCDF-Fortran
-  library](https://www.unidata.ucar.edu/downloads/netcdf/index.jsp).
+  library](https://www.unidata.ucar.edu/downloads/netcdf/index.jsp)
+  (version &ge; 4.5).
 
 - The Fortran compiler that was used to compile your installed
   NetCDF-Fortran library.
 
 - [NCO](https://nco.sourceforge.net).
+- Git (optional, the easiest way to download Ml2pl).
+
+Under Ubuntu &ge; 20.04 or Linux Mint &ge; 20, you can install all these
+dependencies with the following command:
+
+	sudo apt install libnetcdff-dev gfortran cmake nco git
 
 ## Instructions
 
-1.  Get [ml2pl from Github](https://github.com/lguez/Ml2pl). As
-    the Git repository contains a submodule, the easiest way is to
-    type:
+1.  Get [Ml2pl from Github](https://github.com/lguez/Ml2pl). As the
+    Git repository contains a submodule, the easiest way is to type:
 
 		git clone --recurse-submodules https://github.com/lguez/Ml2pl.git
 
-    If you prefer to download a ZIP file then you will also have to
+	If you prefer to download a ZIP file then you will also have to
     download the [cmake subdirectory](https://github.com/lguez/cmake).
 
 2.  Create a build subdirectory in the Ml2pl directory you have just
     downloaded:
 
-        cd the-directory-you-have-just-downloaded
+        cd Ml2pl
         mkdir build
         cd build
 
-3.  Decide in which directory you want to install the program after
+3.  Decide in which directory you want to install Ml2pl after
     compilation and type the command below with your choice after
     `-DCMAKE_INSTALL_PREFIX=` (enter an absolute path). The
     installation process will install a shell script, `ml2pl.sh`, in
@@ -83,6 +90,8 @@ installs a Fortran executable file, `ml2pl`, in
 
 ## Advanced instructions
 
+Most users should not need these advanded instructions.
+
 - You can choose any name and any location for the build
   directory. You have to refer to the source directory when you run
   cmake from the build directory:
@@ -92,8 +101,7 @@ installs a Fortran executable file, `ml2pl`, in
 		cmake /where/I/downloaded/Ml2pl -DFETCH=ON -DCMAKE_INSTALL_PREFIX=~/.local
 
 - The option `-DFETCH=ON` instructs CMake to download, compile and
-  install the libraries
-  [Jumble](https://web.lmd.jussieu.fr/~lguez/Jumble_site/index.html),
+  install the libraries [Jumble](https://lguez.github.io/Jumble),
   [NetCDF95](https://lguez.github.io/NetCDF95) and
   [`Numer_Rec_95`](https://gitlab.in2p3.fr/guez/Numer_Rec_95). If you
   have already installed these libraries, you can omit the FETCH
@@ -101,13 +109,33 @@ installs a Fortran executable file, `ml2pl`, in
 
 ## Troubleshooting
 
-If your installation of NetCDF or NetCDF-Fortran is in a non-standard
-location, and CMake does not find it, then re-run cmake setting the
-variable `CMAKE_PREFIX_PATH` to the directory containing it. CMake
-will then search `${CMAKE_PREFIX_PATH}/lib`,
-`${CMAKE_PREFIX_PATH}/include`, etc. For example:
+- If your installation of NetCDF or NetCDF-Fortran is in a
+  non-standard location, and CMake does not find it, then re-run cmake
+  setting the variable `CMAKE_PREFIX_PATH` to the directory containing
+  it. CMake will then search `${CMAKE_PREFIX_PATH}/lib`,
+  `${CMAKE_PREFIX_PATH}/include`, etc. For example:
 
-	cmake . -DCMAKE_PREFIX_PATH:PATH=/path/to/my/favorite/installation
+		cmake . -DCMAKE_PREFIX_PATH:PATH=/path/to/my/favorite/installation
+
+- If you have several Fortran or C compilers on your machine, it is
+  possible that CMake does not choose the ones you want. Note that when
+  you run cmake, it prints lines telling which compilers it is going
+  to use. For example :
+
+		-- The Fortran compiler identification is GNU 11.3.0
+		-- The C compiler identification is GNU 11.3.0
+
+	So if you want other compilers, remove everything in the build
+	directory and run cmake again setting the variables FC and CC to the
+	compilers you want. For example:
+
+		rm -r * # in the build directory!
+		FC=ifort CC=icc cmake .. -DCMAKE_INSTALL_PREFIX=~/.local
+
+[^1]: On Mac OS, after downloading the application from the CMake web
+    site, run it, then click on "How to Install For Command Line Use"
+    in the Tools menu.
+
 
 # Usage
 
