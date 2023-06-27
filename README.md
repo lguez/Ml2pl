@@ -204,6 +204,8 @@ number of latitudes, $n_\mathrm{mod}$ the number of model levels,
 $n_\mathrm{var}$ the number of variables to interpolate and
 $n_\mathrm{plev}$ the number of target pressure levels, the amount of
 main memory used should be approximately :
+
 $$n_\mathrm{lon} n_\mathrm{lat} [n_\mathrm{mod} (n_\mathrm{var} +
 1) + n_\mathrm{plev} n_\mathrm{var}] \times 4 B$$
+
 (B is for bytes).
