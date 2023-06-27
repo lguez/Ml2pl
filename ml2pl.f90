@@ -15,24 +15,24 @@ PROGRAM ml2pl
 
   IMPLICIT NONE
 
-  INTEGER  iim, n_lat, llm ! dimensions des données avant interpolation
+  INTEGER  n_lon, n_lat, llm ! dimensions des données avant interpolation
   INTEGER ntim ! nombre de dates
 
   INTEGER n_plev ! nombre de niveaux de pression en sortie
 
-  REAL, allocatable:: pres(:, :, :) ! (iim, n_lat, llm)
+  REAL, allocatable:: pres(:, :, :) ! (n_lon, n_lat, llm)
   ! Input pressure field at model levels, in hPa. Should decrease with
   ! increasing level index.
 
   REAL, allocatable:: ap(:) ! (llm)
   REAL, allocatable:: b(:) ! (llm)
-  REAL, allocatable:: ps(:, :) ! (iim, n_lat) surface pressure field, in hPa
+  REAL, allocatable:: ps(:, :) ! (n_lon, n_lat) surface pressure field, in hPa
 
   character(len=10) units
 
   logical hybrid ! pressure is given through ap, b and ps
 
-  REAL, allocatable:: rlon(:) ! (iim)
+  REAL, allocatable:: rlon(:) ! (n_lon)
   REAL, allocatable:: rlat(:) ! (n_lat)
   double precision, allocatable:: time(:) ! (ntim)
 
@@ -62,10 +62,10 @@ PROGRAM ml2pl
 
   CHARACTER(len=nf95_max_name) pressure_var, lon_name, lat_name, time_name
 
-  REAL, allocatable:: var_ml(:, :, :, :) ! (iim, n_lat, llm, n_var)
+  REAL, allocatable:: var_ml(:, :, :, :) ! (n_lon, n_lat, llm, n_var)
   ! variables at model levels
 
-  REAL, allocatable:: var_pl(:, :, :, :) ! (iim, n_lat, n_plev, n_var)
+  REAL, allocatable:: var_pl(:, :, :, :) ! (n_lon, n_lat, n_plev, n_var)
   ! variables at pressure levels
 
   integer surf_loc ! location of surface in target pressure levels
@@ -97,7 +97,7 @@ PROGRAM ml2pl
   call nf95_find_coord(ncid_in, varid=varid, std_name="longitude", &
        name = lon_name)
   call nf95_gw_var(ncid_in, varid, rlon)
-  iim = size(rlon)
+  n_lon = size(rlon)
 
   call nf95_find_coord(ncid_in, varid=varid, std_name="latitude", &
        name = lat_name)
@@ -118,7 +118,7 @@ PROGRAM ml2pl
 
   if (hybrid) then
      print *, 'Using "ap", "b" and "ps" for the input pressure field...'
-     allocate(ap(llm), b(llm), ps(iim, n_lat))
+     allocate(ap(llm), b(llm), ps(n_lon, n_lat))
 
      call nf95_inq_varid(ncid_in, 'ps', varid_p)
      call nf95_get_att(ncid_in, varid_p, "units", units)
@@ -154,7 +154,7 @@ PROGRAM ml2pl
 
   call nf95_put_att(ncid_out, nf95_global, 'comment', &
        'interpolated to pressure levels by ml2pl')
-  call nf95_def_dim(ncid_out, lon_name, iim, dim_x)
+  call nf95_def_dim(ncid_out, lon_name, n_lon, dim_x)
   call nf95_def_dim(ncid_out, lat_name, n_lat, dim_y)
   call nf95_def_dim(ncid_out, 'plev', n_plev, dim_z)
   call nf95_def_dim(ncid_out, time_name, nf95_unlimited, dim_t)
@@ -195,8 +195,9 @@ PROGRAM ml2pl
 
   call nf95_put_var(ncid_out, varid_z, plev)
 
-  allocate(var_ml(iim, n_lat, llm, n_var), var_pl(iim, n_lat, n_plev, n_var))
-  allocate(pres(iim, n_lat, llm))
+  allocate(var_ml(n_lon, n_lat, llm, n_var), &
+       var_pl(n_lon, n_lat, n_plev, n_var))
+  allocate(pres(n_lon, n_lat, llm))
 
   ! For each date, read the pressure field and all the variables to
   ! interpolate, then interpolate at each horizontal position:
@@ -223,7 +224,7 @@ PROGRAM ml2pl
      if (nv >= 1) then
         ! Variables extrapolated below surface
         do j = 1, n_lat
-           do i = 1, iim
+           do i = 1, n_lon
               var_pl(i, j, :, :nv) = regr1_lint(var_ml(i, j, :, :nv), &
                    xs = log(pres(i, j, :)), xt = log(plev))
            end do
@@ -235,7 +236,7 @@ PROGRAM ml2pl
         surf_loc = 1 ! first guess
 
         do j = 1, n_lat
-           do i = 1, iim
+           do i = 1, n_lon
               if (n_plev >= 2) then
                  call hunt(plev, pres(i, j, 1), surf_loc)
                  ! {plev(surf_loc + 1) <= pres(i, j, 1) <=  plev(surf_loc)}
