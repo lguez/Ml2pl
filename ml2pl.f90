@@ -135,7 +135,6 @@ PROGRAM ml2pl
      print *, 'Using "' // trim(pressure_var) // &
           '" for the input pressure field...'
      call nf95_inq_varid(ncid_in, trim(pressure_var), varid_p)
-
      call nf95_get_att(ncid_in, varid_p, "units", units)
      call assert(units == "Pa", trim(pressure_var) // " should be in Pa")
   end if
@@ -196,8 +195,7 @@ PROGRAM ml2pl
   call nf95_put_var(ncid_out, varid_z, plev)
 
   allocate(var_ml(n_lon, n_lat, llm, n_var), &
-       var_pl(n_lon, n_lat, n_plev, n_var))
-  allocate(pres(n_lon, n_lat, llm))
+       var_pl(n_lon, n_lat, n_plev, n_var), pres(n_lon, n_lat, llm))
 
   ! For each date, read the pressure field and all the variables to
   ! interpolate, then interpolate at each horizontal position:
