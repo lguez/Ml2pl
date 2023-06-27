@@ -107,6 +107,16 @@ Most users should not need these advanded instructions.
   have already installed these libraries, you can omit the FETCH
   option.
 
+- On some machines, you may have to choose a run-time environment for
+  `ml2pl.sh`. For example, if you have several compilers and you have
+  selected one at build time with [environment
+  modules](https://github.com/cea-hpc/modules), you probably need to
+  select it also at run time. `ml2pl.sh` tries to source a file named
+  `ml2pl_runtime_env.sh` in the libexec subdirectory of
+  `CMAKE_INSTALL_PREFIX`. So create this file there if you need
+  it. There is a template for
+  [`ml2pl_runtime_env.sh`](ml2pl_runtime_env.sh).
+
 ## Troubleshooting
 
 - If your installation of NetCDF or NetCDF-Fortran is in a
@@ -165,6 +175,14 @@ Running the command with argument `-h` will produce a help message:
 The interpolation is linear in logarithm of pressure. The input
 variables depend on longitude, latitude, vertical level and
 time. There is no constraint on the dimensions.
+
+At given longitude, latitude and time, if a target pressure level is
+lower than the lower bound of the input pressure field, then variables
+are extrapolated to this target pressure level. If a target pressure
+level is higher than the higher bound of the input pressure field,
+then each variable may be extrapolated or set to 0 or set to missing
+at this target pressure level. This is controlled by options `-v`,
+`-w` and `-m`.
 
 All computations are done with single-precision real numbers.
 

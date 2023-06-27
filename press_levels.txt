@@ -1,4 +1,4 @@
-pressure levels, in Pa
+pressure levels, in the same unit as input pressure, Pa in this example
     10
     20
     50
