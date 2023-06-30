@@ -12,7 +12,8 @@ PROGRAM ml2pl
        nf95_inq_dimid, nf95_inq_varid, nf95_inquire_dimension, nf95_open, &
        nf95_put_att, nf95_put_var, nf95_find_coord, nf95_inquire_variable, &
        nf95_clobber, nf95_double, nf95_float, nf95_global, nf95_max_name, &
-       nf95_nowrite, nf95_unlimited, NF95_FILL_REAL
+       nf95_nowrite, nf95_unlimited, NF95_FILL_REAL, nf95_inq_varnatts, &
+       nf95_inq_attname
   use numer_rec_95, only: regr1_lint, hunt, sort
 
   IMPLICIT NONE
@@ -38,14 +39,14 @@ PROGRAM ml2pl
   REAL, allocatable:: rlat(:) ! (n_lat)
   double precision, allocatable:: time(:) ! (ntim)
 
-  integer i, j, k, l, n
+  integer i, j, k, l, n, attnum
   integer n_var ! number of variables to interpolate
 
   ! For NetCDF:
   INTEGER dim_x, dim_y, dim_z, dim_t
   integer, allocatable:: dimids(:)
   INTEGER ncid_in, ncid_out, ncerr
-  integer varid_x, varid_y, varid_z, varid_t, varid_t_in, varid, varid_p
+  integer varid_x, varid_y, varid_z, varid_t, varid_t_in, varid, varid_p, nvatts
 
   integer, allocatable:: varid_in(:) ! (n_var)
   ! IDs in the input NetCDF file of the variables to interpolate
@@ -63,6 +64,7 @@ PROGRAM ml2pl
   ! missing, in "varpossib".
 
   CHARACTER(len = nf95_max_name) pressure_var, lon_name, lat_name, time_name
+  character(len = :), allocatable:: name
 
   REAL, allocatable:: var_ml(:, :, :, :) ! (n_lon, n_lat, llm, n_var)
   ! variables at model levels
@@ -182,6 +184,15 @@ PROGRAM ml2pl
      call nf95_copy_att(ncid_in, varid_in(n), 'units', ncid_out, &
           varid_out(n), ncerr)
      call nf95_put_att(ncid_out, varid_out(n), "_FillValue", NF95_FILL_REAL)
+  end do
+
+  ! Copy all global attributes:
+
+  call nf95_inq_varnatts(ncid_in, NF95_GLOBAL, nvatts)
+
+  do attnum = 1, nvatts
+     call nf95_inq_attname(ncid_in, NF95_GLOBAL, attnum, name)
+     call nf95_copy_att(ncid_in, NF95_GLOBAL, name, ncid_out, NF95_GLOBAL)
   end do
 
   call nf95_enddef(ncid_out)
