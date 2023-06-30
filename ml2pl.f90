@@ -12,7 +12,8 @@ PROGRAM ml2pl
        nf95_inq_dimid, nf95_inq_varid, nf95_inquire_dimension, nf95_open, &
        nf95_put_att, nf95_put_var, nf95_find_coord, nf95_inquire_variable, &
        nf95_clobber, nf95_double, nf95_float, nf95_global, nf95_max_name, &
-       nf95_nowrite, nf95_unlimited, NF95_FILL_REAL
+       nf95_nowrite, nf95_unlimited, NF95_FILL_REAL, nf95_inq_varnatts, &
+       nf95_inq_attname
   use numer_rec_95, only: regr1_lint, hunt, sort
 
   IMPLICIT NONE
@@ -30,7 +31,7 @@ PROGRAM ml2pl
   REAL, allocatable:: b(:) ! (llm)
   REAL, allocatable:: ps(:, :) ! (n_lon, n_lat) surface pressure field
 
-  character(len=10) units
+  character(len = 10) units
 
   logical hybrid ! pressure is given through ap, b and ps
 
@@ -38,14 +39,14 @@ PROGRAM ml2pl
   REAL, allocatable:: rlat(:) ! (n_lat)
   double precision, allocatable:: time(:) ! (ntim)
 
-  integer i, j, k, l, n
+  integer i, j, k, l, n, attnum
   integer n_var ! number of variables to interpolate
 
   ! For NetCDF:
   INTEGER dim_x, dim_y, dim_z, dim_t
   integer, allocatable:: dimids(:)
   INTEGER ncid_in, ncid_out, ncerr
-  integer varid_x, varid_y, varid_z, varid_t, varid_t_in, varid, varid_p
+  integer varid_x, varid_y, varid_z, varid_t, varid_t_in, varid, varid_p, nvatts
 
   integer, allocatable:: varid_in(:) ! (n_var)
   ! IDs in the input NetCDF file of the variables to interpolate
@@ -53,7 +54,7 @@ PROGRAM ml2pl
   integer, allocatable:: varid_out(:) ! (n_var)
   ! IDs in the output NetCDF file of the interpolated variables
 
-  CHARACTER(len=nf95_max_name), allocatable:: varpossib(:) ! (n_var)
+  CHARACTER(len = nf95_max_name), allocatable:: varpossib(:) ! (n_var)
   ! names of the NetCDF variables we want to interpolate
 
   integer nv, nw
@@ -62,7 +63,8 @@ PROGRAM ml2pl
   ! surface. Variable are in the order: extrapolated, set to 0, set to
   ! missing, in "varpossib".
 
-  CHARACTER(len=nf95_max_name) pressure_var, lon_name, lat_name, time_name
+  CHARACTER(len = nf95_max_name) pressure_var, lon_name, lat_name, time_name
+  character(len = :), allocatable:: name
 
   REAL, allocatable:: var_ml(:, :, :, :) ! (n_lon, n_lat, llm, n_var)
   ! variables at model levels
@@ -79,10 +81,10 @@ PROGRAM ml2pl
 
   ! Read the names of the variables:
   call read_column(varpossib, "variable_list_ml2pl.txt")
-  n_var =size(varpossib)
+  n_var = size(varpossib)
 
   ! Read target pressure levels:
-  call read_column(plev, "press_levels.txt", first=2)
+  call read_column(plev, "press_levels.txt", first = 2)
   n_plev = size(plev)
   call assert(n_plev >= 1, "ml2pl: no value found in press_levels.txt")
   call sort(plev)
@@ -96,12 +98,12 @@ PROGRAM ml2pl
 
   ! Read horizontal coordinates:
 
-  call nf95_find_coord(ncid_in, varid=varid, std_name="longitude", &
+  call nf95_find_coord(ncid_in, varid = varid, std_name = "longitude", &
        name = lon_name)
   call nf95_gw_var(ncid_in, varid, rlon)
   n_lon = size(rlon)
 
-  call nf95_find_coord(ncid_in, varid=varid, std_name="latitude", &
+  call nf95_find_coord(ncid_in, varid = varid, std_name = "latitude", &
        name = lat_name)
   call nf95_gw_var(ncid_in, varid, rlat)
   n_lat = size(rlat)
@@ -113,8 +115,8 @@ PROGRAM ml2pl
   end do
 
   ! Get the number of model levels:
-  call nf95_inquire_variable(ncid_in, varid_in(1), dimids=dimids)
-  call nf95_inquire_dimension(ncid_in, dimids(3), nclen=llm)
+  call nf95_inquire_variable(ncid_in, varid_in(1), dimids = dimids)
+  call nf95_inquire_dimension(ncid_in, dimids(3), nclen = llm)
 
   hybrid = len_trim(pressure_var) == 0
 
@@ -139,7 +141,7 @@ PROGRAM ml2pl
   end if
 
   ! Read time coordinate:
-  call nf95_find_coord(ncid_in, varid=varid_t_in, std_name="time", &
+  call nf95_find_coord(ncid_in, varid = varid_t_in, std_name = "time", &
        name = time_name)
   if (varid_t_in == 0) then
      print *, "ml2pl: could not find a time coordinate"
@@ -178,10 +180,19 @@ PROGRAM ml2pl
   allocate(varid_out(n_var))
   do n = 1, n_var
      call nf95_def_var(ncid_out, trim(varpossib(n)), nf95_float, &
-          (/dim_x, dim_y, dim_z, dim_t/), varid_out(n))
+          [dim_x, dim_y, dim_z, dim_t], varid_out(n))
      call nf95_copy_att(ncid_in, varid_in(n), 'units', ncid_out, &
           varid_out(n), ncerr)
      call nf95_put_att(ncid_out, varid_out(n), "_FillValue", NF95_FILL_REAL)
+  end do
+
+  ! Copy all global attributes:
+
+  call nf95_inq_varnatts(ncid_in, NF95_GLOBAL, nvatts)
+
+  do attnum = 1, nvatts
+     call nf95_inq_attname(ncid_in, NF95_GLOBAL, attnum, name)
+     call nf95_copy_att(ncid_in, NF95_GLOBAL, name, ncid_out, NF95_GLOBAL)
   end do
 
   call nf95_enddef(ncid_out)
@@ -200,10 +211,10 @@ PROGRAM ml2pl
   ! interpolate, then interpolate at each horizontal position:
   DO l = 1, ntim
      if (hybrid) then
-        call nf95_get_var(ncid_in, varid_p, ps, start=(/1, 1, l/))
+        call nf95_get_var(ncid_in, varid_p, ps, start = [1, 1, l])
         forall (k = 1:llm) pres(:, :, k) = ap(k) + b(k) * ps
      else
-        call nf95_get_var(ncid_in, varid_p, pres, start=(/1, 1, 1, l/))
+        call nf95_get_var(ncid_in, varid_p, pres, start = [1, 1, 1, l])
      end if
 
      ! Quick check:
@@ -212,7 +223,7 @@ PROGRAM ml2pl
 
      do n = 1, n_var
         call nf95_get_var(ncid_in, varid_in(n), var_ml(:, :, :, n), &
-             start=(/1, 1, 1, l/))
+             start = [1, 1, 1, l])
      end do
 
      if (nv >= 1) then
@@ -251,7 +262,7 @@ PROGRAM ml2pl
 
      do n = 1, n_var
         call nf95_put_var(ncid_out, varid_out(n), var_pl(:, :, :, n), &
-             start=(/1, 1, 1, l/))
+             start = [1, 1, 1, l])
      end DO
   end do
 
