@@ -30,7 +30,7 @@ PROGRAM ml2pl
   REAL, allocatable:: b(:) ! (llm)
   REAL, allocatable:: ps(:, :) ! (n_lon, n_lat) surface pressure field
 
-  character(len=10) units
+  character(len = 10) units
 
   logical hybrid ! pressure is given through ap, b and ps
 
@@ -53,7 +53,7 @@ PROGRAM ml2pl
   integer, allocatable:: varid_out(:) ! (n_var)
   ! IDs in the output NetCDF file of the interpolated variables
 
-  CHARACTER(len=nf95_max_name), allocatable:: varpossib(:) ! (n_var)
+  CHARACTER(len = nf95_max_name), allocatable:: varpossib(:) ! (n_var)
   ! names of the NetCDF variables we want to interpolate
 
   integer nv, nw
@@ -62,7 +62,7 @@ PROGRAM ml2pl
   ! surface. Variable are in the order: extrapolated, set to 0, set to
   ! missing, in "varpossib".
 
-  CHARACTER(len=nf95_max_name) pressure_var, lon_name, lat_name, time_name
+  CHARACTER(len = nf95_max_name) pressure_var, lon_name, lat_name, time_name
 
   REAL, allocatable:: var_ml(:, :, :, :) ! (n_lon, n_lat, llm, n_var)
   ! variables at model levels
@@ -79,10 +79,10 @@ PROGRAM ml2pl
 
   ! Read the names of the variables:
   call read_column(varpossib, "variable_list_ml2pl.txt")
-  n_var =size(varpossib)
+  n_var = size(varpossib)
 
   ! Read target pressure levels:
-  call read_column(plev, "press_levels.txt", first=2)
+  call read_column(plev, "press_levels.txt", first = 2)
   n_plev = size(plev)
   call assert(n_plev >= 1, "ml2pl: no value found in press_levels.txt")
   call sort(plev)
@@ -96,12 +96,12 @@ PROGRAM ml2pl
 
   ! Read horizontal coordinates:
 
-  call nf95_find_coord(ncid_in, varid=varid, std_name="longitude", &
+  call nf95_find_coord(ncid_in, varid = varid, std_name = "longitude", &
        name = lon_name)
   call nf95_gw_var(ncid_in, varid, rlon)
   n_lon = size(rlon)
 
-  call nf95_find_coord(ncid_in, varid=varid, std_name="latitude", &
+  call nf95_find_coord(ncid_in, varid = varid, std_name = "latitude", &
        name = lat_name)
   call nf95_gw_var(ncid_in, varid, rlat)
   n_lat = size(rlat)
@@ -113,8 +113,8 @@ PROGRAM ml2pl
   end do
 
   ! Get the number of model levels:
-  call nf95_inquire_variable(ncid_in, varid_in(1), dimids=dimids)
-  call nf95_inquire_dimension(ncid_in, dimids(3), nclen=llm)
+  call nf95_inquire_variable(ncid_in, varid_in(1), dimids = dimids)
+  call nf95_inquire_dimension(ncid_in, dimids(3), nclen = llm)
 
   hybrid = len_trim(pressure_var) == 0
 
@@ -139,7 +139,7 @@ PROGRAM ml2pl
   end if
 
   ! Read time coordinate:
-  call nf95_find_coord(ncid_in, varid=varid_t_in, std_name="time", &
+  call nf95_find_coord(ncid_in, varid = varid_t_in, std_name = "time", &
        name = time_name)
   if (varid_t_in == 0) then
      print *, "ml2pl: could not find a time coordinate"
@@ -178,7 +178,7 @@ PROGRAM ml2pl
   allocate(varid_out(n_var))
   do n = 1, n_var
      call nf95_def_var(ncid_out, trim(varpossib(n)), nf95_float, &
-          (/dim_x, dim_y, dim_z, dim_t/), varid_out(n))
+          [dim_x, dim_y, dim_z, dim_t], varid_out(n))
      call nf95_copy_att(ncid_in, varid_in(n), 'units', ncid_out, &
           varid_out(n), ncerr)
      call nf95_put_att(ncid_out, varid_out(n), "_FillValue", NF95_FILL_REAL)
@@ -200,10 +200,10 @@ PROGRAM ml2pl
   ! interpolate, then interpolate at each horizontal position:
   DO l = 1, ntim
      if (hybrid) then
-        call nf95_get_var(ncid_in, varid_p, ps, start=(/1, 1, l/))
+        call nf95_get_var(ncid_in, varid_p, ps, start = [1, 1, l])
         forall (k = 1:llm) pres(:, :, k) = ap(k) + b(k) * ps
      else
-        call nf95_get_var(ncid_in, varid_p, pres, start=(/1, 1, 1, l/))
+        call nf95_get_var(ncid_in, varid_p, pres, start = [1, 1, 1, l])
      end if
 
      ! Quick check:
@@ -212,7 +212,7 @@ PROGRAM ml2pl
 
      do n = 1, n_var
         call nf95_get_var(ncid_in, varid_in(n), var_ml(:, :, :, n), &
-             start=(/1, 1, 1, l/))
+             start = [1, 1, 1, l])
      end do
 
      if (nv >= 1) then
@@ -251,7 +251,7 @@ PROGRAM ml2pl
 
      do n = 1, n_var
         call nf95_put_var(ncid_out, varid_out(n), var_pl(:, :, :, n), &
-             start=(/1, 1, 1, l/))
+             start = [1, 1, 1, l])
      end DO
   end do
 
