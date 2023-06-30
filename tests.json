@@ -17,5 +17,14 @@
 	    "$src_dir/histins.nc", "histins_pl.nc"
 	],
 	"create_file": ["press_levels.txt", "p, in Pa\n92500\n"]
+    },
+    "Hybrid":
+    {
+	"command":
+	[
+	    "$install_dir/bin/ml2pl.sh", "-v", "vitu,vitv,temp,ovap",
+	    "$src_dir/histhf_hybrid.nc", "histhf_pl.nc"
+	],
+	"symlink": ["$src_dir/press_levels.txt"]
     }
 }
