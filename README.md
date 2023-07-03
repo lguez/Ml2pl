@@ -215,15 +215,15 @@ There is [an example for file `press_levels.txt`](press_levels.txt).
 
 ## Main memory
 
-The program loops on time index and does not use four-dimensional
-(space plus time) variables. So the main memory used depends on
-spatial resolution of the fields but not on the number of dates.
+The program loops on time index and does not use four-dimensional,
+space plus time, variables. So the amount of main memory used depends
+on spatial resolution of the fields but not on the number of dates.
 
 If $n_\mathrm{lon}$ is the number of longitudes, $n_\mathrm{lat}$ the
-number of latitudes, $n_\mathrm{mod}$ the number of model levels,
-$n_\mathrm{var}$ the number of variables to interpolate and
-$n_\mathrm{plev}$ the number of target pressure levels, the amount of
-main memory used should be approximately :
+number of latitudes, $n_\mathrm{mod}$ the number of model vertical
+levels, $n_\mathrm{var}$ the number of variables to interpolate and
+$n_\mathrm{plev}$ the number of target pressure levels, then the
+amount of main memory used should be approximately :
 
 ```math
 n_\mathrm{lon} n_\mathrm{lat} [n_\mathrm{mod} (n_\mathrm{var} + 1)
