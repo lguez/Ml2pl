@@ -29,7 +29,7 @@ On spirit:
 
     /data/guez/bin/ml2pl.sh
 
-## Dependencies {#dependencies}
+## Dependencies
 
 - [CMake](https://cmake.org/download) (version &ge; 3.16)[^1].
 
