@@ -4,9 +4,9 @@
 	"command":
 	[
 	    "$install_dir/bin/ml2pl.sh", "-p", "pres", "-v", "temp",
-	    "$src_dir/histins.nc", "histins_pl.nc"
+	    "$src_dir/Tests/histins.nc", "histins_pl.nc"
 	],
-	"symlink": ["$src_dir/press_levels.txt"]
+	"symlink": ["$src_dir/Tests/press_levels.txt"]
     },
     "1_target_level":
     {
@@ -14,7 +14,7 @@
 	"command":
 	[
 	    "$install_dir/bin/ml2pl.sh", "-p", "pres", "-v", "temp",
-	    "$src_dir/histins.nc", "histins_pl.nc"
+	    "$src_dir/Tests/histins.nc", "histins_pl.nc"
 	],
 	"create_file": ["press_levels.txt", "p, in Pa\n92500\n"]
     },
@@ -23,8 +23,8 @@
 	"command":
 	[
 	    "$install_dir/bin/ml2pl.sh", "-v", "vitu,vitv,temp,ovap",
-	    "$src_dir/histhf_hybrid.nc", "histhf_pl.nc"
+	    "$src_dir/Tests/histhf_hybrid.nc", "histhf_pl.nc"
 	],
-	"symlink": ["$src_dir/press_levels.txt"]
+	"symlink": ["$src_dir/Tests/press_levels.txt"]
     }
 }
