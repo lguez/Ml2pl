@@ -29,7 +29,7 @@ On spirit:
 
     /data/guez/bin/ml2pl.sh
 
-## Dependencies
+## Dependencies {#dependencies}
 
 - [CMake](https://cmake.org/download) (version &ge; 3.16)[^1].
 
@@ -45,12 +45,14 @@ On spirit:
   NetCDF-Fortran library.
 
 - [NCO](https://nco.sourceforge.net).
-- Git (optional, the easiest way to download Ml2pl).
+- [Git](https://git-scm.com) (optional, the easiest way to download Ml2pl).
+- [Git-annex](https://git-annex.branchable.com/) (optional, to
+  download the NetCDF test files).
 
 Under Ubuntu &ge; 20.04 or Linux Mint &ge; 20, you can install all these
 dependencies with the following command:
 
-	sudo apt install libnetcdff-dev gfortran cmake nco git
+	sudo apt install libnetcdff-dev gfortran cmake nco git git-annex
 
 ## Instructions
 
@@ -116,6 +118,15 @@ Most users should not need these advanded instructions.
   `CMAKE_INSTALL_PREFIX`. So create this file there if you need
   it. There is a template for
   [`ml2pl_runtime_env.sh`](ml2pl_runtime_env.sh).
+- After cloning the repository, the NetCDF entries in the `Tests`
+  subdirectory are broken links. This saves network bandwidth and disk
+  space. If you want to use the files for tests, install git-annex
+  (see [Dependencies](#dependencies)) and type:
+
+		git annex get .
+		
+  This will download the NetCDF files to the right location inside the
+  the `.git` subdirectory, such that the symlinks in `Tests` are fixed.
 
 ## Troubleshooting
 
@@ -211,7 +222,7 @@ value per line. There should be at least one target pressure
 level. There is no other constraint on these values nor on the number
 of values.
 
-There is [an example for file `press_levels.txt`](press_levels.txt).
+There is [an example for file `press_levels.txt`](Tests/press_levels.txt).
 
 ## Main memory
 
