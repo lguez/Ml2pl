@@ -13,9 +13,11 @@ also works with atmospheric data from other sources. It is used in
 
 ## Note for the users of French supercomputing centers
 
-If you want to use this program on the computers jean-zay at IDRIS, or
-irene at TGCC, or spirit at IPSL, the program is already installed at
-the following paths.
+If you want to use this program on the computers jean-zay at
+[Idris](http://www.idris.fr), or irene at
+[TGCC](https://www-hpc.cea.fr/fr/TGCC.html), or spirit at
+[IPSL](https://www.ipsl.fr), the program is already installed at the
+following paths.
 
 On jean-zay:
 
@@ -120,8 +122,8 @@ Most users should not need these advanded instructions.
   [`ml2pl_runtime_env.sh`](ml2pl_runtime_env.sh).
 - After cloning the repository, the NetCDF entries in the `Tests`
   subdirectory are broken links. This saves network bandwidth and disk
-  space. If you want to use the files for tests, install git-annex
-  (see [Dependencies](#dependencies)) and type:
+  space. If you want to use the NetCDF files for tests, install
+  git-annex (see [Dependencies](#dependencies)) and type:
 
 		git annex get .
 		
