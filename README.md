@@ -211,8 +211,14 @@ pressure-file either through hybrid coefficients and surface pressure
 or directly from 4-dimensional pressure. In both cases, pressure must
 decrease when the index of model level increases. This is checked
 quickly in the program. If option `-p` is not used then the program
-will look for `ap`, `b` (hybrid coefficients) and `ps` (surface
-pressure) in the input file or the pressure file.
+will look for NetCDF variables `ap`, `b` (hybrid coefficients) and
+`ps` (surface pressure) in the input file or the pressure file. Let us
+call $n_\mathrm{mod}$ the number of model levels.  $n_\mathrm{mod}$ is
+obtained by the program by looking at the size of the vertical
+dimension of variables to interpolate. The size of `ap` and `b` must
+be $n_\mathrm{mod}$ or $n_\mathrm{mod} + 1$. If the size of `ap` and
+`b` is $n_\mathrm{mod} + 1$ then the program uses mid-values of `ap` and
+`b`: `(ap(l) + ap(l + 1)) / 2` and  `(b(l) + b(l + 1)) / 2`.
 
 The target pressure levels should be in a text file called
 `press_levels.txt` in the current directory at run-time. The first
