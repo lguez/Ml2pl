@@ -6,6 +6,8 @@ PROGRAM ml2pl
 
   ! pres, ap, ps and plev are in the same unit.
 
+  use, intrinsic:: ISO_FORTRAN_ENV
+
   ! Libraries:
   use jumble, only: read_column, assert
   use netcdf95, only: nf95_close, nf95_copy_att, nf95_create, nf95_def_dim, &
@@ -123,13 +125,25 @@ PROGRAM ml2pl
 
   if (hybrid) then
      print *, 'Using "ap", "b" and "ps" for the input pressure field...'
-     allocate(ap(llm), b(llm), ps(n_lon, n_lat))
+     allocate(ps(n_lon, n_lat))
      call nf95_inq_varid(ncid_in, 'ps', varid_p)
      call nf95_get_att(ncid_in, varid_p, "units", units)
      call nf95_inq_varid(ncid_in, 'ap', varid)
-     call nf95_get_var(ncid_in, varid, ap)
+     call nf95_gw_var(ncid_in, varid, ap)
      call nf95_inq_varid(ncid_in, 'b', varid)
-     call nf95_get_var(ncid_in, varid, b)
+     call nf95_gw_var(ncid_in, varid, b)
+
+     if (size(ap) == llm + 1) then
+        print *, "ap has one more element than the number of model levels."
+        print *, "We will use mid-values of ap and b..."
+        ap = (ap(:llm) + ap(2:)) / 2.
+        b = (b(:llm) + b(2:)) / 2.
+     else if (size(ap) /= llm) then
+        write(error_unit, fmt = *) "ml2pl error: different sizes"
+        write(error_unit, fmt = *) "size(ap) = ", size(ap)
+        write(error_unit, fmt = *) "size(", trim(varpossib(1)), ", 3) = ", llm
+        stop 1
+     end if
   else
      print *, 'Using "' // trim(pressure_var) // &
           '" for the input pressure field...'
