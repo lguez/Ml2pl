@@ -26,5 +26,15 @@
 	    "$src_dir/Tests/histhf_hybrid.nc", "histhf_pl.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
+    },
+    "Half_level":
+    {
+	"description": "ap and b are given at half-levels.",
+	"command":
+	[
+	    "$install_dir/bin/ml2pl.sh", "-v", "hus",
+	    "$src_dir/Tests/hus_6hrLev.nc", "hus_6hr_plev.nc"
+	],
+	"symlink": ["$src_dir/Tests/press_levels.txt"]
     }
 }
