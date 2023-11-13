@@ -6,6 +6,7 @@ PROGRAM ml2pl
 
   ! pres, ap, ps and plev are in the same unit.
 
+  ! Libraries:
   use jumble, only: read_column, assert
   use netcdf95, only: nf95_close, nf95_copy_att, nf95_create, nf95_def_dim, &
        nf95_def_var, nf95_enddef, nf95_get_att, nf95_get_var, nf95_gw_var, &
@@ -123,16 +124,12 @@ PROGRAM ml2pl
   if (hybrid) then
      print *, 'Using "ap", "b" and "ps" for the input pressure field...'
      allocate(ap(llm), b(llm), ps(n_lon, n_lat))
-
      call nf95_inq_varid(ncid_in, 'ps', varid_p)
      call nf95_get_att(ncid_in, varid_p, "units", units)
-
      call nf95_inq_varid(ncid_in, 'ap', varid)
      call nf95_get_var(ncid_in, varid, ap)
-
      call nf95_inq_varid(ncid_in, 'b', varid)
      call nf95_get_var(ncid_in, varid, b)
-
   else
      print *, 'Using "' // trim(pressure_var) // &
           '" for the input pressure field...'
