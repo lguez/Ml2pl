@@ -16,8 +16,8 @@ also works with atmospheric data from other sources. It is used in
 If you want to use this program on the computers jean-zay at
 [Idris](http://www.idris.fr), or irene at
 [TGCC](https://www-hpc.cea.fr/fr/TGCC.html), or spirit at
-[IPSL](https://www.ipsl.fr), the program is already installed at the
-following paths.
+[IPSL](https://documentations.ipsl.fr/spirit/index.html), the program
+is already installed at the following paths.
 
 On jean-zay:
 
@@ -47,7 +47,7 @@ On spirit:
   NetCDF-Fortran library.
 
 - [NCO](https://nco.sourceforge.net).
-- [Git](https://git-scm.com) (optional, the easiest way to download Ml2pl).
+- [Git](https://git-scm.com) (optional).
 - [Git-annex](https://git-annex.branchable.com/) (optional, to
   download the NetCDF test files).
 
@@ -58,13 +58,7 @@ dependencies with the following command:
 
 ## Instructions
 
-1.  Get [Ml2pl from Github](https://github.com/lguez/Ml2pl). As the
-    Git repository contains a submodule, the easiest way is to type:
-
-		git clone --recurse-submodules https://github.com/lguez/Ml2pl.git
-
-	If you prefer to download a ZIP file then you will also have to
-    download the [cmake subdirectory](https://github.com/lguez/cmake).
+1.  Get [Ml2pl from Github](https://github.com/lguez/Ml2pl).
 
 2.  Create a build subdirectory in the Ml2pl directory you have just
     downloaded:
@@ -82,6 +76,8 @@ dependencies with the following command:
     variable. For example:
 
         cmake .. -DFETCH=ON -DCMAKE_INSTALL_PREFIX=~/.local
+
+	Note that this requires a network connection.
 
 4.  Type:
 
