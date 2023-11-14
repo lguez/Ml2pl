@@ -2,11 +2,14 @@ cmake_minimum_required(VERSION 3.16...3.27)
 set(CMAKE_BUILD_TYPE Release CACHE STRING
   "Choose the type of build: Debug,Release...")
 project(Ml2pl LANGUAGES Fortran)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
+include(FetchContent)
+FetchContent_Declare(LG_cmake_utils GIT_REPOSITORY
+  https://gitlab.in2p3.fr/guez/cmake.git GIT_TAG 517d97c3)
+FetchContent_MakeAvailable(LG_cmake_utils)
+list(APPEND CMAKE_MODULE_PATH "${lg_cmake_utils_SOURCE_DIR}")
 option(FETCH "Download")
 
 if(FETCH)
-  include(FetchContent)
   FetchContent_Declare(Jumble GIT_REPOSITORY
     https://github.com/lguez/Jumble.git)
   FetchContent_Declare(NetCDF95 GIT_REPOSITORY
