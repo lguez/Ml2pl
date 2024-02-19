@@ -36,5 +36,15 @@
 	    "$src_dir/Tests/hus_6hrLev.nc", "hus_6hr_plev.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
+    },
+    "A_p0":
+    {
+	"description": "ap is given by a and p0.",
+	"command":
+	[
+	    "$install_dir/bin/ml2pl.sh", "-v", "hus",
+	    "$src_dir/Tests/CMCC.nc", "CMCC_pl.nc"
+	],
+	"symlink": ["$src_dir/Tests/press_levels.txt"]
     }
 }
