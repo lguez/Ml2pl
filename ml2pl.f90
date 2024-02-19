@@ -16,7 +16,7 @@ PROGRAM ml2pl
        nf95_put_att, nf95_put_var, nf95_find_coord, nf95_inquire_variable, &
        nf95_clobber, nf95_double, nf95_float, nf95_global, nf95_max_name, &
        nf95_nowrite, nf95_unlimited, NF95_FILL_REAL, nf95_inq_varnatts, &
-       nf95_inq_attname
+       nf95_inq_attname, nf95_noerr
   use numer_rec_95, only: regr1_lint, hunt, sort
 
   IMPLICIT NONE
@@ -80,6 +80,8 @@ PROGRAM ml2pl
   REAL, allocatable:: plev(:) ! (n_plev)
   ! target pressure levels, in descending order
 
+  real p0 ! reference_air_pressure_for_atmosphere_vertical_coordinate
+
   !---------------------------------------------------------------------
 
   ! Read the names of the variables:
@@ -128,8 +130,19 @@ PROGRAM ml2pl
      allocate(ps(n_lon, n_lat))
      call nf95_inq_varid(ncid_in, 'ps', varid_p)
      call nf95_get_att(ncid_in, varid_p, "units", units)
-     call nf95_inq_varid(ncid_in, 'ap', varid)
-     call nf95_gw_var(ncid_in, varid, ap)
+     call nf95_inq_varid(ncid_in, 'ap', varid, ncerr)
+
+     if (ncerr == nf95_noerr) then
+        call nf95_gw_var(ncid_in, varid, ap)
+     else
+        print *, "ap not found, computing it from `a` and p0..."
+        call nf95_inq_varid(ncid_in, 'a', varid)
+        call nf95_gw_var(ncid_in, varid, ap)
+        call nf95_inq_varid(ncid_in, 'p0', varid)
+        call nf95_get_var(ncid_in, varid, p0)
+        ap = ap * p0
+     end if
+
      call nf95_inq_varid(ncid_in, 'b', varid)
      call nf95_gw_var(ncid_in, varid, b)
 
