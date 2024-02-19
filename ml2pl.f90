@@ -214,7 +214,6 @@ PROGRAM ml2pl
   call nf95_put_var(ncid_out, varid_t, time)
 
   call nf95_put_var(ncid_out, varid_z, plev)
-
   allocate(var_ml(n_lon, n_lat, llm, n_var), &
        var_pl(n_lon, n_lat, n_plev, n_var), pres(n_lon, n_lat, llm))
 

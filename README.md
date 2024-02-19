@@ -47,7 +47,7 @@ On spirit:
   NetCDF-Fortran library.
 
 - [NCO](https://nco.sourceforge.net).
-- [Git](https://git-scm.com) (optional).
+- [Git](https://git-scm.com) (Git is used by CMake to fetch a dependency).
 - [Git-annex](https://git-annex.branchable.com/) (optional, to
   download the NetCDF test files).
 
