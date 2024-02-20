@@ -130,9 +130,10 @@ Most users should not need these advanded instructions.
 
 - If your installation of NetCDF or NetCDF-Fortran is in a
   non-standard location, and CMake does not find it, then re-run cmake
-  setting the variable `CMAKE_PREFIX_PATH` to the directory containing
-  it. CMake will then search `${CMAKE_PREFIX_PATH}/lib`,
-  `${CMAKE_PREFIX_PATH}/include`, etc. For example:
+  setting the variable `CMAKE_PREFIX_PATH` to the directory of
+  installation of NetCDF or NetCDF-Fortran. CMake will then search
+  `${CMAKE_PREFIX_PATH}/lib`, `${CMAKE_PREFIX_PATH}/include`, etc. For
+  example:
 
 		cmake . -DCMAKE_PREFIX_PATH:PATH=/path/to/my/favorite/installation
 
@@ -183,7 +184,8 @@ Running the command with argument `-h` will produce a help message:
 
 The interpolation is linear in logarithm of pressure. The input
 variables depend on longitude, latitude, vertical level and
-time. There is no constraint on the dimensions.
+time. There is no constraint on dimension names nor dimensions
+lengths.
 
 At given longitude, latitude and time, if a target pressure level is
 lower than the lower bound of the input pressure field, then variables
@@ -208,13 +210,17 @@ or directly from 4-dimensional pressure. In both cases, pressure must
 decrease when the index of model level increases. This is checked
 quickly in the program. If option `-p` is not used then the program
 will look for NetCDF variables `ap`, `b` (hybrid coefficients) and
-`ps` (surface pressure) in the input file or the pressure file. Let us
-call $n_\mathrm{mod}$ the number of model levels.  $n_\mathrm{mod}$ is
-obtained by the program by looking at the size of the vertical
-dimension of variables to interpolate. The size of `ap` and `b` must
-be $n_\mathrm{mod}$ or $n_\mathrm{mod} + 1$. If the size of `ap` and
-`b` is $n_\mathrm{mod} + 1$ then the program uses mid-values of `ap` and
-`b`: `(ap(l) + ap(l + 1)) / 2` and  `(b(l) + b(l + 1)) / 2`.
+`ps` (surface pressure) in the input file or the pressure file. If the
+program does not find NetCDF variable `ap` then it looks for NetCDF
+variables `a` and `p0` and computes `ap = a * p0`.
+
+Let us call $n_\mathrm{mod}$ the number of model levels.
+$n_\mathrm{mod}$ is obtained by the program by looking at the size of
+the vertical dimension of variables to interpolate. The size of `ap`
+and `b` must be $n_\mathrm{mod}$ or $n_\mathrm{mod} + 1$. If the size
+of `ap` and `b` is $n_\mathrm{mod} + 1$ then the program uses
+mid-values of `ap` and `b`: `(ap(l) + ap(l + 1)) / 2` and `(b(l) +
+b(l + 1)) / 2`.
 
 The target pressure levels should be in a text file called
 `press_levels.txt` in the current directory at run-time. The first
