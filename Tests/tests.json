@@ -46,5 +46,14 @@
 	    "$src_dir/Tests/CMCC.nc", "CMCC_pl.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
+    },
+    "Option_w":
+    {
+	"command":
+	[
+	    "$install_dir/bin/ml2pl.sh", "-w", "vitu",
+	    "$src_dir/Tests/histhf_hybrid.nc", "histhf_pl.nc"
+	],
+	"symlink": ["$src_dir/Tests/press_levels.txt"]
     }
 }
