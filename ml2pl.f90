@@ -16,7 +16,7 @@ PROGRAM ml2pl
        nf95_put_att, nf95_put_var, nf95_find_coord, nf95_inquire_variable, &
        nf95_clobber, nf95_double, nf95_float, nf95_global, nf95_max_name, &
        nf95_nowrite, nf95_unlimited, NF95_FILL_REAL, nf95_inq_varnatts, &
-       nf95_inq_attname, nf95_noerr
+       nf95_inq_attname, nf95_noerr, nf95_get_missing
   use numer_rec_95, only: regr1_lint, hunt, sort
 
   IMPLICIT NONE
@@ -75,6 +75,8 @@ PROGRAM ml2pl
   ! target pressure levels, in descending order
 
   real p0 ! reference_air_pressure_for_atmosphere_vertical_coordinate
+  logical, allocatable:: mask(:, :), descending_pressure(:, :)
+  real missing ! missing value for NetCDF variable ps or pressure_var
 
   !---------------------------------------------------------------------
 
@@ -157,6 +159,8 @@ PROGRAM ml2pl
      call nf95_inq_varid(ncid_in, trim(pressure_var), varid_p)
   end if
 
+  call nf95_get_missing(ncid_in, varid_p, missing)
+
   ! Read time coordinate:
 
   call nf95_find_coord(ncid_in, varid = varid_t_in, std_name = "time", &
@@ -228,21 +232,34 @@ PROGRAM ml2pl
   call nf95_put_var(ncid_out, varid_t, time)
 
   call nf95_put_var(ncid_out, varid_z, plev)
-  allocate(var_ml(n_lon, n_lat, llm, n_var), &
-       var_pl(n_lon, n_lat, n_plev, n_var), pres(n_lon, n_lat, llm))
+  allocate(var_ml(n_lon, n_lat, llm, n_var), mask(n_lon, n_lat), &
+       var_pl(n_lon, n_lat, n_plev, n_var), pres(n_lon, n_lat, llm), &
+       descending_pressure(n_lon, n_lat))
 
   ! For each date, read the pressure field and all the variables to
   ! interpolate, then interpolate at each horizontal position:
   DO l = 1, ntim
      if (hybrid) then
         call nf95_get_var(ncid_in, varid_p, ps, start = [1, 1, l])
-        forall (k = 1:llm) pres(:, :, k) = ap(k) + b(k) * ps
+        mask = ps /= missing
+
+        forall (k = 1:llm)
+           where(mask) pres(:, :, k) = ap(k) + b(k) * ps
+        end forall
      else
         call nf95_get_var(ncid_in, varid_p, pres, start = [1, 1, 1, l])
+        mask = pres(:, :, 1) /= missing
      end if
 
      ! Quick check:
-     call assert(pres(1, 1, 1) > pres(1, 1, 2), &
+
+     where(mask)
+        descending_pressure = pres(:, :, 1) > pres(:, :, 2)
+     elsewhere
+        descending_pressure = .true.
+     end where
+
+     call assert(all(descending_pressure), &
           "Input pressure field should decrease with increasing level index")
 
      do n = 1, n_var
@@ -254,8 +271,12 @@ PROGRAM ml2pl
         ! Variables extrapolated below surface
         do j = 1, n_lat
            do i = 1, n_lon
-              var_pl(i, j, :, :nv) = regr1_lint(var_ml(i, j, :, :nv), &
-                   xs = log(pres(i, j, :)), xt = log(plev))
+              if (mask(i, j)) then
+                 var_pl(i, j, :, :nv) = regr1_lint(var_ml(i, j, :, :nv), &
+                      xs = log(pres(i, j, :)), xt = log(plev))
+              else
+                 var_pl(i, j, :, :nv) = NF95_FILL_REAL
+              end if
            end do
         end do
      end if
@@ -266,20 +287,24 @@ PROGRAM ml2pl
 
         do j = 1, n_lat
            do i = 1, n_lon
-              if (n_plev >= 2) then
-                 call hunt(plev, pres(i, j, 1), surf_loc)
-                 ! {plev(surf_loc + 1) <= pres(i, j, 1) <=  plev(surf_loc)}
+              if (mask(i, j)) then
+                 if (n_plev >= 2) then
+                    call hunt(plev, pres(i, j, 1), surf_loc)
+                    ! {plev(surf_loc + 1) <= pres(i, j, 1) <=  plev(surf_loc)}
+                 else
+                    ! n_plev == 1
+                    surf_loc = merge(0, 1, plev(1) <= pres(i, j, 1))
+                 end if
+
+                 var_pl(i, j, :surf_loc, nv + 1: nv + nw) = 0.
+                 var_pl(i, j, :surf_loc, nv + nw + 1:) = NF95_FILL_REAL
+
+                 var_pl(i, j, surf_loc + 1:, nv + 1:) &
+                      = regr1_lint(var_ml(i, j, :, nv + 1:), &
+                      xs = log(pres(i, j, :)), xt = log(plev(surf_loc + 1:)))
               else
-                 ! n_plev == 1
-                 surf_loc = merge(0, 1, plev(1) <= pres(i, j, 1))
+                 var_pl(i, j, :, nv + 1:) = NF95_FILL_REAL
               end if
-
-              var_pl(i, j, :surf_loc, nv + 1: nv + nw) = 0.
-              var_pl(i, j, :surf_loc, nv + nw + 1:) = NF95_FILL_REAL
-
-              var_pl(i, j, surf_loc + 1:, nv + 1:) &
-                   = regr1_lint(var_ml(i, j, :, nv + 1:), &
-                   xs = log(pres(i, j, :)), xt = log(plev(surf_loc + 1:)))
            end do
         end do
      end if
