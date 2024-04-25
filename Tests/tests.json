@@ -55,5 +55,16 @@
 	    "$src_dir/Tests/histhf_hybrid.nc", "histhf_pl.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
+    },
+    "Missing":
+    {
+	"description":
+	"The input fields are missing on part of the geographical domain.",
+	"command":
+	[
+	    "$install_dir/bin/ml2pl.sh", "-w", "vitu", "-p", "pres",
+	    "$src_dir/Tests/LAM.nc", "LAM_pl.nc"
+	],
+	"symlink": ["$src_dir/Tests/press_levels.txt"]
     }
 }
