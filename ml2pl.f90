@@ -23,7 +23,6 @@ PROGRAM ml2pl
 
   INTEGER  n_lon, n_lat, llm ! dimensions des données avant interpolation
   INTEGER ntim ! nombre de dates
-
   INTEGER n_plev ! nombre de niveaux de pression en sortie
 
   REAL, allocatable:: pres(:, :, :) ! (n_lon, n_lat, llm) Input
@@ -33,15 +32,11 @@ PROGRAM ml2pl
   REAL, allocatable:: ap(:) ! (llm)
   REAL, allocatable:: b(:) ! (llm)
   REAL, allocatable:: ps(:, :) ! (n_lon, n_lat) surface pressure field
-
   character(len = 10) units
-
   logical hybrid ! pressure is given through ap, b and ps
-
   REAL, allocatable:: rlon(:) ! (n_lon)
   REAL, allocatable:: rlat(:) ! (n_lat)
   double precision, allocatable:: time(:) ! (ntim)
-
   integer i, j, k, l, n, attnum
   integer n_var ! number of variables to interpolate
 
@@ -98,16 +93,17 @@ PROGRAM ml2pl
        "Pressure levels should be distinct")
 
   read *, nv, nw, pressure_var
-
   call nf95_open("input_file_ml2pl.nc", nf95_nowrite, ncid_in)
 
   ! Read horizontal coordinates:
 
+  ! Longitude:
   call nf95_find_coord(ncid_in, varid = varid, std_name = "longitude", &
        name = lon_name)
   call nf95_gw_var(ncid_in, varid, rlon)
   n_lon = size(rlon)
 
+  ! Latitude:
   call nf95_find_coord(ncid_in, varid = varid, std_name = "latitude", &
        name = lat_name)
   call nf95_gw_var(ncid_in, varid, rlat)
@@ -165,17 +161,19 @@ PROGRAM ml2pl
   end if
 
   ! Read time coordinate:
+
   call nf95_find_coord(ncid_in, varid = varid_t_in, std_name = "time", &
        name = time_name)
+
   if (varid_t_in == 0) then
      print *, "ml2pl: could not find a time coordinate"
      stop 1
   end if
+
   call nf95_gw_var(ncid_in, varid_t_in, time)
   ntim = size(time)
 
   call nf95_create("output_file_ml2pl.nc", nf95_clobber, ncid_out)
-
   call nf95_put_att(ncid_out, nf95_global, 'comment', &
        'interpolated to pressure levels by ml2pl')
   call nf95_def_dim(ncid_out, lon_name, n_lon, dim_x)
@@ -183,25 +181,31 @@ PROGRAM ml2pl
   call nf95_def_dim(ncid_out, 'plev', n_plev, dim_z)
   call nf95_def_dim(ncid_out, time_name, nf95_unlimited, dim_t)
 
+  ! Longitude:
   call nf95_def_var(ncid_out, lon_name, nf95_float, dim_x, varid_x)
   call nf95_put_att(ncid_out, varid_x, 'standard_name', 'longitude')
   call nf95_put_att(ncid_out, varid_x, 'units', 'degrees_east')
 
+  ! Latitude:
   call nf95_def_var(ncid_out, lat_name, nf95_float, dim_y, varid_y)
   call nf95_put_att(ncid_out, varid_y, 'standard_name', 'latitude')
   call nf95_put_att(ncid_out, varid_y, 'units', 'degrees_north')
 
+  ! Pressure level:
   call nf95_def_var(ncid_out, 'plev', nf95_float, dim_z, varid_z)
   call nf95_put_att(ncid_out, varid_z, 'standard_name', 'air_pressure')
   call nf95_put_att(ncid_out, varid_z, 'units', trim(units))
 
+  ! Time:
   call nf95_def_var(ncid_out, time_name, nf95_double, dim_t, varid_t)
   call nf95_put_att(ncid_out, varid_t, 'standard_name', 'time')
   call nf95_copy_att(ncid_in, varid_t_in, 'units', ncid_out, varid_t)
   call nf95_copy_att(ncid_in, varid_t_in, 'calendar', ncid_out, varid_t)
 
   ! Create interpolated variables:
+
   allocate(varid_out(n_var))
+
   do n = 1, n_var
      call nf95_def_var(ncid_out, trim(varpossib(n)), nf95_float, &
           [dim_x, dim_y, dim_z, dim_t], varid_out(n))
