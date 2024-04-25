@@ -185,7 +185,9 @@ Running the command with argument `-h` will produce a help message:
 The interpolation is linear in logarithm of pressure. The input
 variables depend on longitude, latitude, vertical level and
 time. There is no constraint on dimension names nor dimensions
-lengths.
+lengths. The input fields may be defined on only part of the
+rectangular longitude-latitude domain at each time (as specified with
+the `missing_value` or `_FillValue` attribute).
 
 At given longitude, latitude and time, if a target pressure level is
 lower than the lower bound of the input pressure field, then variables
@@ -195,7 +197,9 @@ then each variable may be extrapolated or set to 0 or set to missing
 at this target pressure level. This is controlled by options `-v`,
 `-w` and `-m`.
 
-All computations are done with single-precision real numbers.
+All computations are done with single-precision real numbers and
+output is in single-precision. So if the input fields are in double
+precision, they are first converted to single-precision.
 
 input-file, output-file and pressure-file are NetCDF files.
 
