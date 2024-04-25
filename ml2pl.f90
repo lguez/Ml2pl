@@ -32,7 +32,6 @@ PROGRAM ml2pl
   REAL, allocatable:: ap(:) ! (llm)
   REAL, allocatable:: b(:) ! (llm)
   REAL, allocatable:: ps(:, :) ! (n_lon, n_lat) surface pressure field
-  character(len = 10) units
   logical hybrid ! pressure is given through ap, b and ps
   REAL, allocatable:: rlon(:) ! (n_lon)
   REAL, allocatable:: rlat(:) ! (n_lat)
@@ -125,7 +124,6 @@ PROGRAM ml2pl
      print *, 'Using "ap", "b" and "ps" for the input pressure field...'
      allocate(ps(n_lon, n_lat))
      call nf95_inq_varid(ncid_in, 'ps', varid_p)
-     call nf95_get_att(ncid_in, varid_p, "units", units)
      call nf95_inq_varid(ncid_in, 'ap', varid, ncerr)
 
      if (ncerr == nf95_noerr) then
@@ -157,7 +155,6 @@ PROGRAM ml2pl
      print *, 'Using "' // trim(pressure_var) // &
           '" for the input pressure field...'
      call nf95_inq_varid(ncid_in, trim(pressure_var), varid_p)
-     call nf95_get_att(ncid_in, varid_p, "units", units)
   end if
 
   ! Read time coordinate:
@@ -194,7 +191,7 @@ PROGRAM ml2pl
   ! Pressure level:
   call nf95_def_var(ncid_out, 'plev', nf95_float, dim_z, varid_z)
   call nf95_put_att(ncid_out, varid_z, 'standard_name', 'air_pressure')
-  call nf95_put_att(ncid_out, varid_z, 'units', trim(units))
+  call nf95_copy_att(ncid_in, varid_p, 'units', ncid_out, varid_z)
 
   ! Time:
   call nf95_def_var(ncid_out, time_name, nf95_double, dim_t, varid_t)
