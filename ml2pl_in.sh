@@ -14,12 +14,6 @@
 # Absolute path to Fortran executable:
 executable=@CMAKE_INSTALL_FULL_LIBEXECDIR@/ml2pl
 
-# Set up the necessary environment:
-if [[ -f @CMAKE_INSTALL_FULL_LIBEXECDIR@/ml2pl_runtime_env.sh ]]
-then
-    source @CMAKE_INSTALL_FULL_LIBEXECDIR@/ml2pl_runtime_env.sh
-fi
-
 USAGE="usage: ml2pl.sh [OPTION]... input-file output-file [pressure-file]
 
 Interpolates NetCDF variables from model levels to pressure
@@ -63,6 +57,12 @@ while getopts hp:v:w:m: name
 	  exit 1;;
   esac
 done
+
+# Set up the necessary environment:
+if [[ -f @CMAKE_INSTALL_FULL_LIBEXECDIR@/ml2pl_runtime_env.sh ]]
+then
+    source @CMAKE_INSTALL_FULL_LIBEXECDIR@/ml2pl_runtime_env.sh
+fi
 
 if [[ -n $pressure_var ]]
 then
