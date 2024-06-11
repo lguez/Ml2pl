@@ -66,5 +66,15 @@
 	    "$src_dir/Tests/LAM.nc", "LAM_pl.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
+    },
+    "Pressure_file":
+    {
+	"command":
+	[
+	    "$install_dir/bin/ml2pl.sh", "-m", "ta", "-p", "pfull",
+	    "$src_dir/Tests/ta.nc", "ta_pl.nc", "$src_dir/Tests/pfull.nc"
+	],
+	"symlink": ["$src_dir/Tests/press_levels.txt"],
+	"sel_diff_args": {"ign_att": ["history", "history_of_appended_files"]}
     }
 }
