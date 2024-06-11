@@ -22,7 +22,8 @@
     {
 	"command":
 	[
-	    "$install_dir/bin/ml2pl.sh", "-v", "vitu,vitv,temp,ovap",
+	    "$install_dir/bin/ml2pl.sh", "-v", "vitu", "-v", "vitv",
+	    "-v", "temp", "-v", "ovap",
 	    "$src_dir/Tests/histhf_hybrid.nc", "histhf_pl.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
