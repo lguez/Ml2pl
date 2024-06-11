@@ -21,15 +21,15 @@ is already installed at the following paths.
 
 On jean-zay:
 
-    /gpfswork/rech/lmd/rdzt899/bin/ml2pl.sh
+    /gpfswork/rech/lmd/rdzt899/bin/ml2pl.py
 
 On irene:
 
-    /ccc/work/cont003/gencmip6/guezl/bin/ml2pl.sh
+    /ccc/work/cont003/gencmip6/guezl/bin/ml2pl.py
 
 On spirit:
 
-    /data/guez/bin/ml2pl.sh
+    /data/guez/bin/ml2pl.py
 
 ## Dependencies
 
@@ -69,7 +69,7 @@ dependencies with the following command:
 3.  Decide in which directory you want to install Ml2pl after
     compilation and type the command below with your choice after
     `-DCMAKE_INSTALL_PREFIX=` (enter an absolute path). The
-    installation process will install a shell script, `ml2pl.sh`, in
+    installation process will install a Python script, `ml2pl.py`, in
     `$CMAKE_INSTALL_PREFIX/bin`. It is convenient for
     `$CMAKE_INSTALL_PREFIX/bin` to be in your `PATH` environment
     variable. For example:
@@ -107,14 +107,14 @@ Most users should not need these advanded instructions.
   option.
 
 - On some machines, you may have to choose a run-time environment for
-  `ml2pl.sh`. For example, if you have several compilers and you have
+  `ml2pl.py`. For example, if you have several compilers and you have
   selected one at build time with [environment
   modules](https://github.com/cea-hpc/modules), you probably need to
-  select it also at run time. `ml2pl.sh` tries to source a file named
-  `ml2pl_runtime_env.sh` in the libexec subdirectory of
+  select it also at run time. `ml2pl.py` tries to source a file named
+  `ml2pl_runtime_env.py` in the libexec subdirectory of
   `CMAKE_INSTALL_PREFIX`. So create this file there if you need
   it. There is a template for
-  [`ml2pl_runtime_env.sh`](ml2pl_runtime_env.sh).
+  [`ml2pl_runtime_env.py`](ml2pl_runtime_env.py).
 - After cloning the repository, the NetCDF entries in the `Tests`
   subdirectory are broken links. This saves network bandwidth and disk
   space. If you want to use the NetCDF files for tests, install
@@ -160,26 +160,41 @@ Most users should not need these advanded instructions.
 
 Running the command with argument `-h` will produce a help message:
 
-    $ ml2pl.sh -h
-    usage: ml2pl.sh [OPTION]... input-file output-file [pressure-file]
+```
+$ ml2pl.py -h
+usage: ml2pl.py [-h] [-p VARIABLE] [-v VARIABLE] [-w VARIABLE] [-m VARIABLE]
+                [--version]
+                input_file output_file [pressure_file]
 
-    Interpolates NetCDF variables from model levels to pressure
-    levels.
+Interpolates NetCDF variables from model levels to pressure levels.
 
-    Options:
-       -h                       : this help message
-       -p variable              : name of 4-dimensional variable in the input file
-                                  or the pressure file containing the
-                                  pressure field at model levels
-       -v variable[,variable...]: names of variables you want to interpolate,
-                                  or extrapolate if target pressure level is below
-                                  surface
-       -w variable[,variable...]: names of variables you want to interpolate,
-                                  or set to 0 if target pressure level is below
-                                  surface
-       -m variable[,variable...]: names of variables you want to interpolate,
-                                  or set to missing if target pressure level is
-                                  below surface
+The target pressure levels should be in a file called
+"press_levels.txt", in the same unit as input pressure field. For
+further information, see https://github.com/lguez/Ml2pl.
+
+Do not run several instances of this script in parallel in the same
+directory. It creates temporary files, with names that are not made
+different for different instances.
+
+positional arguments:
+  input_file
+  output_file
+  pressure_file
+
+options:
+  -h, --help            show this help message and exit
+  -p VARIABLE, --pressure_var VARIABLE
+                        name of 4-dimensional variable in the input file or in
+                        the pressure file containing the pressure field at
+                        model levels
+  -v VARIABLE           name of variable you want to interpolate, or
+                        extrapolate if target pressure level is below surface
+  -w VARIABLE           name of variable you want to interpolate, or set to 0
+                        if target pressure level is below surface
+  -m VARIABLE           name of variable you want to interpolate, or set to
+                        missing if target pressure level is below surface
+  --version             show program's version number and exit
+```
 
 The interpolation is linear in logarithm of pressure. The input
 variables depend on longitude, latitude, vertical level and
@@ -205,7 +220,8 @@ input-file, output-file and pressure-file are NetCDF files.
 You must list the variables you want to interpolate, each variable
 listed after either `-v`, `-w` or `-m`. There must be at least one variable
 listed, following either `-v`, `-w` or `-m`. In the same command, you
-can have several options `-v`, `-w` or `-m` with associated variables.
+can have several options `-v`, `-w` or `-m` with associated
+variables: one variable for each `-v`, `-w` or `-m`.
 
 The pressure field at model levels can be specified in input-file or
 pressure-file either through hybrid coefficients and surface pressure

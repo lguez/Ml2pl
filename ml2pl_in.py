@@ -6,12 +6,13 @@ The target pressure levels should be in a file called
 "press_levels.txt", in the same unit as input pressure field. For
 further information, see https://github.com/lguez/Ml2pl.
 
-Author: Lionel GUEZ
-
 Do not run several instances of this script in parallel in the same
-directory. File names are not made different for different instances.
+directory. It creates temporary files, with names that are not made
+different for different instances.
 
 """
+
+# Author: Lionel GUEZ
 
 # This script is a wrapper for a Fortran program. For an explanation
 # of programming choices, see notes.
@@ -67,7 +68,7 @@ parser.add_argument(
     "target pressure level is below surface",
 )
 parser.add_argument(
-    "--version", action="version", version="%(prog)s v@Ml2pl_VERSION@"
+    "--version", action="version", version="%(prog)s @Ml2pl_VERSION@"
 )
 args = parser.parse_args()
 
