@@ -9,7 +9,7 @@ PROGRAM ml2pl
   use, intrinsic:: ISO_FORTRAN_ENV
 
   ! Libraries:
-  use jumble, only: read_column, assert
+  use jumble, only: read_column, assert, get_command_arg_dyn
   use netcdf95, only: nf95_close, nf95_copy_att, nf95_create, nf95_def_dim, &
        nf95_def_var, nf95_enddef, nf95_get_att, nf95_get_var, nf95_gw_var, &
        nf95_inq_dimid, nf95_inq_varid, nf95_inquire_dimension, nf95_open, &
@@ -61,7 +61,7 @@ PROGRAM ml2pl
   ! missing, in "varpossib".
 
   CHARACTER(len = nf95_max_name) pressure_var, lon_name, lat_name, time_name
-  character(len = :), allocatable:: name
+  character(len = :), allocatable:: name, input_file
 
   REAL, allocatable:: var_ml(:, :, :, :) ! (n_lon, n_lat, llm, n_var)
   ! variables at model levels
@@ -80,6 +80,7 @@ PROGRAM ml2pl
 
   !---------------------------------------------------------------------
 
+  call get_command_arg_dyn(1, input_file)
   ! Read the names of the variables:
   call read_column(varpossib, "variable_list_ml2pl.txt")
   n_var = size(varpossib)
@@ -94,7 +95,7 @@ PROGRAM ml2pl
        "Pressure levels should be distinct")
 
   read *, nv, nw, pressure_var
-  call nf95_open("input_file_ml2pl.nc", nf95_nowrite, ncid_in)
+  call nf95_open(input_file, nf95_nowrite, ncid_in)
 
   ! Read horizontal coordinates:
 

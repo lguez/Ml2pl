@@ -165,7 +165,7 @@ for my_var in $*
 done >variable_list_ml2pl.txt
 
 # Run the Fortran program:
-$executable <<EOF
+$executable input_file_ml2pl.nc <<EOF
 $nv
 $nw
 "$pressure_var"
