@@ -35,7 +35,4 @@ target_link_libraries(ml2pl PRIVATE NetCDF95::netcdf95 Jumble::jumble
 include(GNUInstallDirs)
 install(TARGETS ml2pl DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
 configure_file(ml2pl_in.py ml2pl.py @ONLY)
-configure_file(ml2pl_in.sh ml2pl.sh @ONLY)
-install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ml2pl.py
-  DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
-install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ml2pl.sh TYPE BIN)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ml2pl.py TYPE BIN)

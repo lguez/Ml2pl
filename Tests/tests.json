@@ -3,7 +3,7 @@
     {
 	"command":
 	[
-	    "$install_dir/bin/ml2pl.sh", "-p", "pres", "-v", "temp",
+	    "$install_dir/bin/ml2pl.py", "-p", "pres", "-v", "temp",
 	    "$src_dir/Tests/histins.nc", "histins_pl.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
@@ -13,7 +13,7 @@
 	"description": "Single target pressure level.",
 	"command":
 	[
-	    "$install_dir/bin/ml2pl.sh", "-p", "pres", "-v", "temp",
+	    "$install_dir/bin/ml2pl.py", "-p", "pres", "-v", "temp",
 	    "$src_dir/Tests/histins.nc", "histins_pl.nc"
 	],
 	"create_file": ["press_levels.txt", "p, in Pa\n92500\n"]
@@ -22,7 +22,7 @@
     {
 	"command":
 	[
-	    "$install_dir/bin/ml2pl.sh", "-v", "vitu", "-v", "vitv",
+	    "$install_dir/bin/ml2pl.py", "-v", "vitu", "-v", "vitv",
 	    "-v", "temp", "-v", "ovap",
 	    "$src_dir/Tests/histhf_hybrid.nc", "histhf_pl.nc"
 	],
@@ -33,7 +33,7 @@
 	"description": "ap and b are given at half-levels.",
 	"command":
 	[
-	    "$install_dir/bin/ml2pl.sh", "-m", "hus",
+	    "$install_dir/bin/ml2pl.py", "-m", "hus",
 	    "$src_dir/Tests/hus_6hrLev.nc", "hus_6hr_plev.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
@@ -43,7 +43,7 @@
 	"description": "ap is given by a and p0.",
 	"command":
 	[
-	    "$install_dir/bin/ml2pl.sh", "-m", "hus",
+	    "$install_dir/bin/ml2pl.py", "-m", "hus",
 	    "$src_dir/Tests/CMCC.nc", "CMCC_pl.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
@@ -52,7 +52,7 @@
     {
 	"command":
 	[
-	    "$install_dir/bin/ml2pl.sh", "-w", "vitu",
+	    "$install_dir/bin/ml2pl.py", "-w", "vitu",
 	    "$src_dir/Tests/histhf_hybrid.nc", "histhf_pl.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
@@ -63,7 +63,7 @@
 	"The input fields are missing on part of the geographical domain.",
 	"command":
 	[
-	    "$install_dir/bin/ml2pl.sh", "-w", "vitu", "-p", "pres",
+	    "$install_dir/bin/ml2pl.py", "-w", "vitu", "-p", "pres",
 	    "$src_dir/Tests/LAM.nc", "LAM_pl.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"]
@@ -72,7 +72,7 @@
     {
 	"command":
 	[
-	    "$install_dir/bin/ml2pl.sh", "-m", "ta", "-p", "pfull",
+	    "$install_dir/bin/ml2pl.py", "-m", "ta", "-p", "pfull",
 	    "$src_dir/Tests/ta.nc", "ta_pl.nc", "$src_dir/Tests/pfull.nc"
 	],
 	"symlink": ["$src_dir/Tests/press_levels.txt"],

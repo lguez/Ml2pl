@@ -21,13 +21,18 @@ import sys
 import os
 import subprocess
 
+sys.path.append("@CMAKE_INSTALL_FULL_LIBEXECDIR@")
+
+try:
+    import ml2pl_runtime_env
+except ModuleNotFoundError:
+    pass
+
 # Absolute path to Fortran executable:
 executable = "@CMAKE_INSTALL_FULL_LIBEXECDIR@/ml2pl"
 
 parser = argparse.ArgumentParser(
-    prog="ml2pl.sh",
-    description=__doc__,
-    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
 )
 parser.add_argument("input_file")
 parser.add_argument("output_file")
@@ -76,13 +81,13 @@ if not os.access(executable, os.X_OK):
     sys.exit(f"{executable} not found or not executable")
 
 if not os.access(args.input_file, os.R_OK):
-    sys.exit(f"ml2pl.sh: {args.input_file} not found")
+    sys.exit(f"ml2pl.py: {args.input_file} not found")
 
 if not os.access("press_levels.txt", os.R_OK):
-    sys.exit("ml2pl.sh: press_levels.txt not found\nUse option -h for help")
+    sys.exit("ml2pl.py: press_levels.txt not found\nUse option -h for help")
 
 if args.pressure_file and not os.access(args.pressure_file, os.R_OK):
-    sys.exit(f"ml2pl.sh: {args.pressure_file} not found")
+    sys.exit(f"ml2pl.py: {args.pressure_file} not found")
 
 if not args.v:
     args.v = []
