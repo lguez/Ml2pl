@@ -239,7 +239,7 @@ PROGRAM ml2pl
 
   ! For each date, read the pressure field and all the variables to
   ! interpolate, then interpolate at each horizontal position:
-  DO l = 1, ntim
+  loop_time: DO l = 1, ntim
      if (hybrid) then
         call nf95_get_var(ncid_in, varid_p, ps, start = [1, 1, l])
         mask = ps /= missing
@@ -314,7 +314,7 @@ PROGRAM ml2pl
         call nf95_put_var(ncid_out, varid_out(n), var_pl(:, :, :, n), &
              start = [1, 1, 1, l])
      end DO
-  end do
+  end do loop_time
 
   call nf95_close(ncid_out)
   call nf95_close(ncid_in)

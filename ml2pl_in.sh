@@ -138,7 +138,6 @@ else
 fi
 
 output_file=$2
-
 IFS=","
 
 if [[ -z $variable_list_v ]]
