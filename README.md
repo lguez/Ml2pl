@@ -46,7 +46,6 @@ On spirit:
 - The Fortran compiler that was used to compile your installed
   NetCDF-Fortran library.
 
-- [NCO](https://nco.sourceforge.net).
 - [Git](https://git-scm.com) (Git is used by CMake to fetch a dependency).
 - [Git-annex](https://git-annex.branchable.com/) (optional, to
   download the NetCDF test files).
@@ -54,7 +53,7 @@ On spirit:
 Under Ubuntu &ge; 20.04 or Linux Mint &ge; 20, you can install all these
 dependencies with the following command:
 
-	sudo apt install libnetcdff-dev gfortran cmake nco git git-annex
+	sudo apt install libnetcdff-dev gfortran cmake git git-annex
 
 ## Instructions
 
