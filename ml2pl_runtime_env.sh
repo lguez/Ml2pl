@@ -5,5 +5,4 @@
 module purge --silent
 module load intel/... --silent
 module load netcdf-fortran/... --silent
-module load nco/... --silent
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:...NetCDF...

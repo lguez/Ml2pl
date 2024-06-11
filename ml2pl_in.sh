@@ -117,26 +117,17 @@ if [[ ! -f "press_levels.txt" ]]
     exit 1
 fi
 
-if (($# == 2))
+if (($# == 3))
 then
-    ln -sf $1 input_file_ml2pl.nc
-else
-    # $# == 3
-
     if [[ ! -f $3 ]]
     then
 	echo "ml2pl.sh: $3 not found"
 	exit 1
     fi
-
-    cp $3 input_file_ml2pl.nc
-    chmod u+w input_file_ml2pl.nc
-    ncks --append ${variable_list_v:+--variable=$variable_list_v} \
-	${variable_list_w:+--variable=$variable_list_w} \
-	${variable_list_m:+--variable=$variable_list_m} $1 input_file_ml2pl.nc
-    echo "Appended $1 to $3."
+    pressure_file=$3
 fi
 
+input_file=$1
 output_file=$2
 IFS=","
 
@@ -164,7 +155,7 @@ for my_var in $*
 done >variable_list_ml2pl.txt
 
 # Run the Fortran program:
-$executable input_file_ml2pl.nc <<EOF
+$executable $input_file $pressure_file <<EOF
 $nv
 $nw
 "$pressure_var"
@@ -175,4 +166,4 @@ EOF
 mv output_file_ml2pl.nc $output_file
 
 # Clean up:
-rm input_file_ml2pl.nc variable_list_ml2pl.txt
+rm variable_list_ml2pl.txt

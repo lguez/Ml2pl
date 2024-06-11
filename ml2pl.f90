@@ -42,7 +42,7 @@ PROGRAM ml2pl
   ! For NetCDF:
   INTEGER dim_x, dim_y, dim_z, dim_t
   integer, allocatable:: dimids(:)
-  INTEGER ncid_in, ncid_out, ncerr
+  INTEGER ncid_in, ncid_out, ncerr, ncid_pres_in
   integer varid_x, varid_y, varid_z, varid_t, varid_t_in, varid, varid_p, nvatts
 
   integer, allocatable:: varid_in(:) ! (n_var)
@@ -61,7 +61,7 @@ PROGRAM ml2pl
   ! missing, in "varpossib".
 
   CHARACTER(len = nf95_max_name) pressure_var, lon_name, lat_name, time_name
-  character(len = :), allocatable:: name, input_file
+  character(len = :), allocatable:: name, input_file, pressure_file
 
   REAL, allocatable:: var_ml(:, :, :, :) ! (n_lon, n_lat, llm, n_var)
   ! variables at model levels
@@ -121,27 +121,35 @@ PROGRAM ml2pl
   call nf95_inquire_variable(ncid_in, varid_in(1), dimids = dimids)
   call nf95_inquire_dimension(ncid_in, dimids(3), nclen = llm)
 
+  if (command_argument_count() == 1) then
+     ncid_pres_in = ncid_in
+  else
+     ! {command_argument_count() == 2}
+     call get_command_arg_dyn(2, pressure_file)
+     call nf95_open(pressure_file, nf95_nowrite, ncid_pres_in)
+  end if
+
   hybrid = len_trim(pressure_var) == 0
 
   if (hybrid) then
      print *, 'Using "ap", "b" and "ps" for the input pressure field...'
      allocate(ps(n_lon, n_lat))
-     call nf95_inq_varid(ncid_in, 'ps', varid_p)
-     call nf95_inq_varid(ncid_in, 'ap', varid, ncerr)
+     call nf95_inq_varid(ncid_pres_in, 'ps', varid_p)
+     call nf95_inq_varid(ncid_pres_in, 'ap', varid, ncerr)
 
      if (ncerr == nf95_noerr) then
-        call nf95_gw_var(ncid_in, varid, ap)
+        call nf95_gw_var(ncid_pres_in, varid, ap)
      else
         print *, "ap not found, computing it from `a` and p0..."
-        call nf95_inq_varid(ncid_in, 'a', varid)
-        call nf95_gw_var(ncid_in, varid, ap)
-        call nf95_inq_varid(ncid_in, 'p0', varid)
-        call nf95_get_var(ncid_in, varid, p0)
+        call nf95_inq_varid(ncid_pres_in, 'a', varid)
+        call nf95_gw_var(ncid_pres_in, varid, ap)
+        call nf95_inq_varid(ncid_pres_in, 'p0', varid)
+        call nf95_get_var(ncid_pres_in, varid, p0)
         ap = ap * p0
      end if
 
-     call nf95_inq_varid(ncid_in, 'b', varid)
-     call nf95_gw_var(ncid_in, varid, b)
+     call nf95_inq_varid(ncid_pres_in, 'b', varid)
+     call nf95_gw_var(ncid_pres_in, varid, b)
 
      if (size(ap) == llm + 1) then
         print *, "ap has one more element than the number of model levels."
@@ -157,10 +165,10 @@ PROGRAM ml2pl
   else
      print *, 'Using "' // trim(pressure_var) // &
           '" for the input pressure field...'
-     call nf95_inq_varid(ncid_in, trim(pressure_var), varid_p)
+     call nf95_inq_varid(ncid_pres_in, trim(pressure_var), varid_p)
   end if
 
-  call nf95_get_missing(ncid_in, varid_p, missing)
+  call nf95_get_missing(ncid_pres_in, varid_p, missing)
 
   ! Read time coordinate:
 
@@ -196,7 +204,7 @@ PROGRAM ml2pl
   ! Pressure level:
   call nf95_def_var(ncid_out, 'plev', nf95_float, dim_z, varid_z)
   call nf95_put_att(ncid_out, varid_z, 'standard_name', 'air_pressure')
-  call nf95_copy_att(ncid_in, varid_p, 'units', ncid_out, varid_z)
+  call nf95_copy_att(ncid_pres_in, varid_p, 'units', ncid_out, varid_z)
 
   ! Time:
   call nf95_def_var(ncid_out, time_name, nf95_double, dim_t, varid_t)
@@ -241,14 +249,14 @@ PROGRAM ml2pl
   ! interpolate, then interpolate at each horizontal position:
   loop_time: DO l = 1, ntim
      if (hybrid) then
-        call nf95_get_var(ncid_in, varid_p, ps, start = [1, 1, l])
+        call nf95_get_var(ncid_pres_in, varid_p, ps, start = [1, 1, l])
         mask = ps /= missing
 
         forall (k = 1:llm)
            where(mask) pres(:, :, k) = ap(k) + b(k) * ps
         end forall
      else
-        call nf95_get_var(ncid_in, varid_p, pres, start = [1, 1, 1, l])
+        call nf95_get_var(ncid_pres_in, varid_p, pres, start = [1, 1, 1, l])
         mask = pres(:, :, 1) /= missing
      end if
 
@@ -317,6 +325,7 @@ PROGRAM ml2pl
   end do loop_time
 
   call nf95_close(ncid_out)
+  if (ncid_pres_in /= ncid_in) call nf95_close(ncid_pres_in)
   call nf95_close(ncid_in)
 
 END PROGRAM ml2pl
