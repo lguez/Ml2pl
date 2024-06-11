@@ -66,7 +66,7 @@ fi
 
 if [[ -n $pressure_var ]]
 then
-    # For Climaf, remove pressure_var from variable lists:
+    # For Climaf, remove pressure_var from lists of variables:
 
     variable_list_v=`echo $variable_list_v | sed -e 's/'$pressure_var'//g' -e s'/,,*/,/g' -e s'/^,//' -e 's/,$//'`
     
