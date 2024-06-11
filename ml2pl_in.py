@@ -61,6 +61,9 @@ parser.add_argument(
     help="name of variable you want to interpolate, or set to missing if "
     "target pressure level is below surface",
 )
+parser.add_argument(
+    "--version", action="version", version="%(prog)s v@Ml2pl_VERSION@"
+)
 args = parser.parse_args()
 
 if not (args.v or args.w or args.m):

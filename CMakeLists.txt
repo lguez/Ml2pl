@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16...3.27)
 set(CMAKE_BUILD_TYPE Release CACHE STRING
   "Choose the type of build: Debug,Release...")
-project(Ml2pl LANGUAGES Fortran)
+project(Ml2pl VERSION 0.7 LANGUAGES Fortran)
 include(FetchContent)
 FetchContent_Declare(LG_cmake_utils GIT_REPOSITORY
   https://gitlab.in2p3.fr/guez/cmake.git GIT_TAG 517d97c3)
