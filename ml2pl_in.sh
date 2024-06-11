@@ -130,6 +130,7 @@ else
     fi
 
     cp $3 input_file_ml2pl.nc
+    chmod u+w input_file_ml2pl.nc
     ncks --append ${variable_list_v:+--variable=$variable_list_v} \
 	${variable_list_w:+--variable=$variable_list_w} \
 	${variable_list_m:+--variable=$variable_list_m} $1 input_file_ml2pl.nc
