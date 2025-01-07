@@ -120,5 +120,35 @@
         "history_of_appended_files"
       ]
     }
+  },
+  "Comma_separated": {
+    "description": "Test comma-separated list of variables. The result should be the same as the result of test Hybrid.",
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "$src_dir/Tests/histhf_hybrid.nc",
+      "histhf_pl.nc",
+      "-v",
+      "vitu,vitv,temp,ovap"
+    ],
+    "symlink": [
+      "$src_dir/Tests/press_levels.txt"
+    ]
+  },
+  "Extend": {
+    "description": "Test extension of comma-separated list of variables.",
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "$src_dir/Tests/histhf_hybrid.nc",
+      "histhf_pl.nc",
+      "-v",
+      "vitu,vitv",
+      "-m",
+      "temp",
+      "-v",
+      "ovap"
+    ],
+    "symlink": [
+      "$src_dir/Tests/press_levels.txt"
+    ]
   }
 }
