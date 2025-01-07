@@ -1,81 +1,124 @@
 {
-    "Base_test":
-    {
-	"command":
-	[
-	    "$install_dir/bin/ml2pl.py", "-p", "pres", "-v", "temp",
-	    "$src_dir/Tests/histins.nc", "histins_pl.nc"
-	],
-	"symlink": ["$src_dir/Tests/press_levels.txt"]
-    },
-    "1_target_level":
-    {
-	"description": "Single target pressure level.",
-	"command":
-	[
-	    "$install_dir/bin/ml2pl.py", "-p", "pres", "-v", "temp",
-	    "$src_dir/Tests/histins.nc", "histins_pl.nc"
-	],
-	"create_file": ["press_levels.txt", "p, in Pa\n92500\n"]
-    },
-    "Hybrid":
-    {
-	"command":
-	[
-	    "$install_dir/bin/ml2pl.py", "-v", "vitu", "-v", "vitv",
-	    "-v", "temp", "-v", "ovap",
-	    "$src_dir/Tests/histhf_hybrid.nc", "histhf_pl.nc"
-	],
-	"symlink": ["$src_dir/Tests/press_levels.txt"]
-    },
-    "Half_level":
-    {
-	"description": "ap and b are given at half-levels.",
-	"command":
-	[
-	    "$install_dir/bin/ml2pl.py", "-m", "hus",
-	    "$src_dir/Tests/hus_6hrLev.nc", "hus_6hr_plev.nc"
-	],
-	"symlink": ["$src_dir/Tests/press_levels.txt"]
-    },
-    "A_p0":
-    {
-	"description": "ap is given by a and p0.",
-	"command":
-	[
-	    "$install_dir/bin/ml2pl.py", "-m", "hus",
-	    "$src_dir/Tests/CMCC.nc", "CMCC_pl.nc"
-	],
-	"symlink": ["$src_dir/Tests/press_levels.txt"]
-    },
-    "Option_w":
-    {
-	"command":
-	[
-	    "$install_dir/bin/ml2pl.py", "-w", "vitu",
-	    "$src_dir/Tests/histhf_hybrid.nc", "histhf_pl.nc"
-	],
-	"symlink": ["$src_dir/Tests/press_levels.txt"]
-    },
-    "Missing":
-    {
-	"description":
-	"The input fields are missing on part of the geographical domain.",
-	"command":
-	[
-	    "$install_dir/bin/ml2pl.py", "-w", "vitu", "-p", "pres",
-	    "$src_dir/Tests/LAM.nc", "LAM_pl.nc"
-	],
-	"symlink": ["$src_dir/Tests/press_levels.txt"]
-    },
-    "Pressure_file":
-    {
-	"command":
-	[
-	    "$install_dir/bin/ml2pl.py", "-m", "ta", "-p", "pfull",
-	    "$src_dir/Tests/ta.nc", "ta_pl.nc", "$src_dir/Tests/pfull.nc"
-	],
-	"symlink": ["$src_dir/Tests/press_levels.txt"],
-	"sel_diff_args": {"ign_att": ["history", "history_of_appended_files"]}
+  "Base_test": {
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "-p",
+      "pres",
+      "-v",
+      "temp",
+      "$src_dir/Tests/histins.nc",
+      "histins_pl.nc"
+    ],
+    "symlink": [
+      "$src_dir/Tests/press_levels.txt"
+    ]
+  },
+  "1_target_level": {
+    "description": "Single target pressure level.",
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "-p",
+      "pres",
+      "-v",
+      "temp",
+      "$src_dir/Tests/histins.nc",
+      "histins_pl.nc"
+    ],
+    "create_file": [
+      "press_levels.txt",
+      "p, in Pa\n92500\n"
+    ]
+  },
+  "Hybrid": {
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "-v",
+      "vitu",
+      "-v",
+      "vitv",
+      "-v",
+      "temp",
+      "-v",
+      "ovap",
+      "$src_dir/Tests/histhf_hybrid.nc",
+      "histhf_pl.nc"
+    ],
+    "symlink": [
+      "$src_dir/Tests/press_levels.txt"
+    ]
+  },
+  "Half_level": {
+    "description": "ap and b are given at half-levels.",
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "-m",
+      "hus",
+      "$src_dir/Tests/hus_6hrLev.nc",
+      "hus_6hr_plev.nc"
+    ],
+    "symlink": [
+      "$src_dir/Tests/press_levels.txt"
+    ]
+  },
+  "A_p0": {
+    "description": "ap is given by a and p0.",
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "-m",
+      "hus",
+      "$src_dir/Tests/CMCC.nc",
+      "CMCC_pl.nc"
+    ],
+    "symlink": [
+      "$src_dir/Tests/press_levels.txt"
+    ]
+  },
+  "Option_w": {
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "-w",
+      "vitu",
+      "$src_dir/Tests/histhf_hybrid.nc",
+      "histhf_pl.nc"
+    ],
+    "symlink": [
+      "$src_dir/Tests/press_levels.txt"
+    ]
+  },
+  "Missing": {
+    "description": "The input fields are missing on part of the geographical domain.",
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "-w",
+      "vitu",
+      "-p",
+      "pres",
+      "$src_dir/Tests/LAM.nc",
+      "LAM_pl.nc"
+    ],
+    "symlink": [
+      "$src_dir/Tests/press_levels.txt"
+    ]
+  },
+  "Pressure_file": {
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "-m",
+      "ta",
+      "-p",
+      "pfull",
+      "$src_dir/Tests/ta.nc",
+      "ta_pl.nc",
+      "$src_dir/Tests/pfull.nc"
+    ],
+    "symlink": [
+      "$src_dir/Tests/press_levels.txt"
+    ],
+    "sel_diff_args": {
+      "ign_att": [
+        "history",
+        "history_of_appended_files"
+      ]
     }
+  }
 }
