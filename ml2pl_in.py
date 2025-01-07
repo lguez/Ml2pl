@@ -22,6 +22,11 @@ import sys
 import os
 import subprocess
 
+
+def comma_split(s):
+    return s.split(",")
+
+
 sys.path.append("@CMAKE_INSTALL_FULL_LIBEXECDIR@")
 
 try:
@@ -48,23 +53,26 @@ parser.add_argument(
 )
 parser.add_argument(
     "-v",
-    metavar="VARIABLE",
+    metavar="VARIABLE[,...]",
+    type=comma_split,
     action="append",
-    help="name of variable you want to interpolate, or extrapolate if "
+    help="names of variables you want to interpolate, or extrapolate if "
     "target pressure level is below surface",
 )
 parser.add_argument(
     "-w",
-    metavar="VARIABLE",
+    metavar="VARIABLE[,...]",
+    type=comma_split,
     action="append",
-    help="name of variable you want to interpolate, or set to 0 if target "
+    help="names of variables you want to interpolate, or set to 0 if target "
     "pressure level is below surface",
 )
 parser.add_argument(
     "-m",
-    metavar="VARIABLE",
+    metavar="VARIABLE[,...]",
+    type=comma_split,
     action="append",
-    help="name of variable you want to interpolate, or set to missing if "
+    help="names of variables you want to interpolate, or set to missing if "
     "target pressure level is below surface",
 )
 parser.add_argument(
@@ -90,14 +98,14 @@ if not os.access("press_levels.txt", os.R_OK):
 if args.pressure_file and not os.access(args.pressure_file, os.R_OK):
     sys.exit(f"ml2pl.py: {args.pressure_file} not found")
 
-if not args.v:
-    args.v = []
+for my_option in ["v", "w", "m"]:
+    option_value = getattr(args, my_option)
 
-if not args.w:
-    args.w = []
-
-if not args.m:
-    args.m = []
+    if option_value:
+        # option_value is a list of lists, flatten it:
+        setattr(args, my_option, [x for y in option_value for x in y])
+    else:
+        setattr(args, my_option, [])
 
 nv = len(args.v)
 nw = len(args.w)
