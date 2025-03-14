@@ -158,43 +158,7 @@ Most users should not need these advanded instructions.
 
 # Usage
 
-Running the command with argument `-h` will produce a help message:
-
-```
-$ ml2pl.py -h
-usage: ml2pl.py [-h] [-p VARIABLE] [-v VARIABLE] [-w VARIABLE] [-m VARIABLE]
-                [--version]
-                input_file output_file [pressure_file]
-
-Interpolates NetCDF variables from model levels to pressure levels.
-
-The target pressure levels should be in a file called
-"press_levels.txt", in the same unit as input pressure field. For
-further information, see https://github.com/lguez/Ml2pl.
-
-Do not run several instances of this script in parallel in the same
-directory. It creates temporary files, with names that are not made
-different for different instances.
-
-positional arguments:
-  input_file
-  output_file
-  pressure_file
-
-options:
-  -h, --help            show this help message and exit
-  -p VARIABLE, --pressure_var VARIABLE
-                        name of 4-dimensional variable in the input file or in
-                        the pressure file containing the pressure field at
-                        model levels
-  -v VARIABLE           name of variable you want to interpolate, or
-                        extrapolate if target pressure level is below surface
-  -w VARIABLE           name of variable you want to interpolate, or set to 0
-                        if target pressure level is below surface
-  -m VARIABLE           name of variable you want to interpolate, or set to
-                        missing if target pressure level is below surface
-  --version             show program's version number and exit
-```
+Running the command with argument `-h` will produce a help message.
 
 The interpolation is linear in logarithm of pressure. The input
 variables depend on longitude, latitude, vertical level and
@@ -218,10 +182,11 @@ precision, they are first converted to single-precision.
 input-file, output-file and pressure-file are NetCDF files.
 
 You must list the variables you want to interpolate, each variable
-listed after either `-v`, `-w` or `-m`. There must be at least one variable
-listed, following either `-v`, `-w` or `-m`. In the same command, you
-can have several options `-v`, `-w` or `-m` with associated
-variables: one variable for each `-v`, `-w` or `-m`.
+listed after either `-v`, `-w` or `-m`. There must be at least one
+variable listed, following either `-v`, `-w` or `-m`. In the same
+command, you can have several options `-v`, `-w` or `-m` with
+associated variables: one variable, or several comma-separated
+variables for each `-v`, `-w` or `-m`.
 
 The pressure field at model levels can be specified in input-file or
 pressure-file either through hybrid coefficients and surface pressure
