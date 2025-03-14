@@ -158,7 +158,7 @@ Most users should not need these advanded instructions.
 
 # Usage
 
-Running the command with argument `-h` will produce a help message.
+Running the command `ml2pl.py -h` will produce a help message.
 
 The interpolation is linear in logarithm of pressure. The input
 variables depend on longitude, latitude, vertical level and
