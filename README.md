@@ -57,14 +57,11 @@ dependencies with the following command:
 
 ## Instructions
 
-1.  Get [Ml2pl from Github](https://github.com/lguez/Ml2pl).
+1.  Download
+    [Ml2pl](https://github.com/lguez/Ml2pl/archive/refs/heads/master.zip).
+2.  Unzip it:
 
-2.  Create a build subdirectory in the Ml2pl directory you have just
-    downloaded:
-
-        cd Ml2pl
-        mkdir build
-        cd build
+		unzip Ml2pl-master.zip
 
 3.  Decide in which directory you want to install Ml2pl after
     compilation and type the command below with your choice after
@@ -74,17 +71,21 @@ dependencies with the following command:
     `$CMAKE_INSTALL_PREFIX/bin` to be in your `PATH` environment
     variable. For example:
 
-        cmake .. -DFETCH=ON -DCMAKE_INSTALL_PREFIX=~/.local
+        cmake -B build -S Ml2pl-master -DFETCH=ON -DCMAKE_INSTALL_PREFIX=~/.local
 
-	Note that this requires a network connection.
+	Note that this requires a network connection. The command above
+    will create a directory named build.
+4.  Compile:
 
-4.  Type:
+		cmake --build build
 
-        make install
+4.  Install:
 
-You do not need to keep the downloaded directory Ml2pl (nor the build
-directory) after installation. Note that the installation process also
-installs a Fortran executable file, `ml2pl`, in
+        cmake --install build
+
+You do not need to keep the downloaded directory Ml2pl-master nor the
+build directory after installation. Note that the installation process
+also installs a Fortran executable file, `ml2pl`, in
 `$CMAKE_INSTALL_PREFIX/libexec`. Do not remove this file.
 
 ## Advanced instructions
@@ -92,12 +93,12 @@ installs a Fortran executable file, `ml2pl`, in
 Most users should not need these advanded instructions.
 
 - You can choose any name and any location for the build
-  directory. You have to refer to the source directory when you run
-  cmake from the build directory:
+  directory. You have to refer to the build directory when you compile
+  and install:
 
-		mkdir /wherever/any/name
-		cd /wherever/any/name
-		cmake /where/I/downloaded/Ml2pl -DFETCH=ON -DCMAKE_INSTALL_PREFIX=~/.local
+		cmake -B /wherever/any/name -S Ml2pl-master -DFETCH=ON -DCMAKE_INSTALL_PREFIX=~/.local
+		cmake --build /wherever/any/name
+		cmake --install /wherever/any/name
 
 - The option `-DFETCH=ON` instructs CMake to download, compile and
   install the libraries [Jumble](https://lguez.github.io/Jumble),
@@ -134,7 +135,7 @@ Most users should not need these advanded instructions.
   `${CMAKE_PREFIX_PATH}/lib`, `${CMAKE_PREFIX_PATH}/include`, etc. For
   example:
 
-		cmake . -DCMAKE_PREFIX_PATH:PATH=/path/to/my/favorite/installation
+		cmake -B build -S Ml2pl-master -DCMAKE_PREFIX_PATH:PATH=/path/to/my/favorite/installation
 
 - If you have several Fortran compilers on your machine, it is
   possible that CMake does not choose the one you want. Note that when
@@ -143,12 +144,12 @@ Most users should not need these advanded instructions.
 
 		-- The Fortran compiler identification is GNU 11.3.0
 
-	So if you want another compiler, remove everything in the build
-	directory and run cmake again setting the variable FC to the
-	compiler you want. For example:
+	So if you want another compiler, remove the build directory and
+	run cmake again setting the variable FC to the compiler you
+	want. For example:
 
-		rm -r * # in the build directory!
-		FC=ifort cmake .. -DCMAKE_INSTALL_PREFIX=~/.local
+		rm -r build
+		FC=ifort cmake -B build -DFETCH=ON -DCMAKE_INSTALL_PREFIX=~/.local
 
 [^1]: On Mac OS, after downloading the application from the CMake web
     site, run it, then click on "How to Install For Command Line Use"
@@ -266,7 +267,28 @@ amount of main memory used should be approximately :
 
 ```math
 n_\mathrm{lon} n_\mathrm{lat} [n_\mathrm{mod} (n_\mathrm{var} + 1)
-+ n_\mathrm{plev} n_\mathrm{var}] \times 4 B
++ n_\mathrm{plev} n_\mathrm{var}] \times 4 \mathrm{B}
 ```
 
 (B is for bytes).
+
+## Examples
+
+```
+ml2pl.py -p pres -v temp histins.nc histins_pl.nc
+```
+
+interpolates variable temp from file `histins.nc`, using 4-dimensional
+pressure variable pres also from `histins.nc`, and creates file
+`histins_pl.nc`. Variable temp is extrapolated at locations below the
+surface.
+
+```
+ml2pl.py histhf_hybrid.nc histhf_pl.nc -v vitu,vitv -m temp -v ovap
+```
+
+interpolates variables vitu, vitv, temp and ovap from file
+`histhf_hybrid.nc`, using variables ap, b and ps also from
+`histhf_hybrid.nc`, and creates file `histhf_pl.nc`. Variables vitu,
+vitv and ovap are extrapolated at locations below the surface while
+variable temp is set to missing.
