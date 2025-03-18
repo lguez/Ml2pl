@@ -27,7 +27,7 @@ On irene:
 
     /ccc/work/cont003/gencmip6/guezl/bin/ml2pl.py
 
-On spirit:
+On spirit and spiritx:
 
     /data/guez/bin/ml2pl.py
 
@@ -216,7 +216,26 @@ value per line. There should be at least one target pressure
 level. There is no other constraint on these values nor on the number
 of values.
 
-There is [an example for file `press_levels.txt`](Tests/press_levels.txt).
+There is [an example for file
+`press_levels.txt`](Tests/press_levels.txt).
+
+If the input surface pressure or 4-dimensional pressure is double
+precision then you will get a warning when you run `ml2pl.py`:
+
+```
+ Warning: nf95_get_missing: type mismatch
+ type of `missing` argument: float
+ type of NetCDF attribute _FillValue: double
+ Converted _FillValue:            ...
+ varid =         ...
+ End of warning
+```
+
+This warning is produced because the `missing_value` or `_FillValue`
+attribute of the input pressure, which is double precision as the
+input pressure, is converted in ml2pl to single precision. You can
+ignore this warning if there are no values of the input pressure field
+close to the missing value. This is usually the case.
 
 ## Main memory
 
