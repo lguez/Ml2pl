@@ -75,7 +75,13 @@ PROGRAM ml2pl
   ! target pressure levels, in descending order
 
   real p0 ! reference_air_pressure_for_atmosphere_vertical_coordinate
-  logical, allocatable:: mask(:, :), descending_pressure(:, :)
+
+  logical, allocatable:: mask(:, :)
+  ! The fields can be defined on only part of the longitude-latitude
+  ! rectangle, at each time step. This is useful in particular for a
+  ! limited-area, non-rectangular, domain.
+
+  logical, allocatable:: descending_pressure(:, :)
   real missing ! missing value for NetCDF variable ps or pressure_var
 
   !---------------------------------------------------------------------

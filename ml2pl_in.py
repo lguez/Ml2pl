@@ -7,7 +7,7 @@ The target pressure levels should be in a file called
 further information, see https://github.com/lguez/Ml2pl.
 
 Do not run several instances of this script in parallel in the same
-directory. It creates temporary files, with names that are not made
+directory. It creates a temporary file, with a name that is not made
 different for different instances.
 
 """

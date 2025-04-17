@@ -50,12 +50,16 @@ On spirit and spiritx:
 - [Git-annex](https://git-annex.branchable.com/) (optional, to
   download the NetCDF test files).
 
+[^1]: On Mac OS, after downloading the application from the CMake web
+    site, run it, then click on "How to Install For Command Line Use"
+    in the Tools menu.
+
 Under Ubuntu &ge; 20.04 or Linux Mint &ge; 20, you can install all these
 dependencies with the following command:
 
 	sudo apt install libnetcdff-dev gfortran cmake git git-annex
 
-## Instructions
+## Installation instructions
 
 1.  Download
     [Ml2pl](https://github.com/lguez/Ml2pl/archive/refs/heads/master.zip).
@@ -88,7 +92,7 @@ build directory after installation. Note that the installation process
 also installs a Fortran executable file, `ml2pl`, in
 `$CMAKE_INSTALL_PREFIX/libexec`. Do not remove this file.
 
-## Advanced instructions
+## Advanced installation instructions
 
 Most users should not need these advanded instructions.
 
@@ -122,11 +126,11 @@ Most users should not need these advanded instructions.
   git-annex (see [Dependencies](#dependencies)) and type:
 
 		git annex get
-		
+
   This will download the NetCDF files to the right location inside the
   the `.git` subdirectory, such that the symlinks in `Tests` are fixed.
 
-## Troubleshooting
+## Troubleshooting installation
 
 - If your installation of NetCDF or NetCDF-Fortran is in a
   non-standard location, and CMake does not find it, then re-run cmake
@@ -151,11 +155,6 @@ Most users should not need these advanded instructions.
 		rm -r build
 		FC=ifort cmake -B build -DFETCH=ON -DCMAKE_INSTALL_PREFIX=~/.local
 
-[^1]: On Mac OS, after downloading the application from the CMake web
-    site, run it, then click on "How to Install For Command Line Use"
-    in the Tools menu.
-
-
 # Usage
 
 Running the command `ml2pl.py -h` will produce a help message.
@@ -165,7 +164,8 @@ variables depend on longitude, latitude, vertical level and
 time. There is no constraint on dimension names nor dimensions
 lengths. The input fields may be defined on only part of the
 rectangular longitude-latitude domain at each time (as specified with
-the `missing_value` or `_FillValue` attribute).
+the `missing_value` or `_FillValue` attribute). In particular, the
+fields may be defined on a non-rectangular limited-area domain.
 
 At given longitude, latitude and time, if a target pressure level is
 lower than the lower bound of the input pressure field, then variables
@@ -219,23 +219,41 @@ of values.
 There is [an example for file
 `press_levels.txt`](Tests/press_levels.txt).
 
-If the input surface pressure or 4-dimensional pressure is double
+## Troubleshooting usage
+
+- If the input surface pressure or 4-dimensional pressure is double
 precision then you will get a warning when you run `ml2pl.py`:
 
-```
- Warning: nf95_get_missing: type mismatch
- type of `missing` argument: float
- type of NetCDF attribute _FillValue: double
- Converted _FillValue:            ...
- varid =         ...
- End of warning
-```
+		Warning: nf95_get_missing: type mismatch
+		type of `missing` argument: float
+		type of NetCDF attribute _FillValue: double
+		Converted _FillValue:            ...
+		varid =         ...
+		End of warning
 
-This warning is produced because the `missing_value` or `_FillValue`
-attribute of the input pressure, which is double precision as the
-input pressure, is converted in ml2pl to single precision. You can
-ignore this warning if there are no values of the input pressure field
-close to the missing value. This is usually the case.
+	This warning is produced because the `missing_value` or
+	`_FillValue` attribute of the input pressure, which is double
+	precision as is the input pressure, is converted in ml2pl to
+	single precision. You can ignore this warning if there are no
+	values of the input pressure field close to the missing
+	value. This is usually the case.
+
+- When you process fields from a non-rectangular limited-area domain,
+  if you get the message:
+
+		Using "pres" for the input pressure field...
+		An assertion failed with this tag: Input pressure field should decrease with increasing level index
+		program terminated by assert1
+
+	the reason may be that your input pressure field has NaN values
+    instead of the value specified by the `missing_value` or
+    `_FillValue` attribute. This is a defect of your data. You can fix
+    it with the following command:
+
+		cdo setctomiss,nan my_input.nc my_input_fixed.nc
+
+	See [cdo
+    documentation](https://code.mpimet.mpg.de/projects/cdo/embedded/index.html#x1-3530002.6.15).
 
 ## Main memory
 
