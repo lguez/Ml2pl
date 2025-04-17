@@ -61,7 +61,7 @@ PROGRAM ml2pl
   ! missing, in "varpossib".
 
   CHARACTER(len = nf95_max_name) pressure_var, lon_name, lat_name, time_name
-  character(len = :), allocatable:: name, input_file, pressure_file
+  character(len = :), allocatable:: name, input_file, output_file, pressure_file
 
   REAL, allocatable:: var_ml(:, :, :, :) ! (n_lon, n_lat, llm, n_var)
   ! variables at model levels
@@ -81,6 +81,7 @@ PROGRAM ml2pl
   !---------------------------------------------------------------------
 
   call get_command_arg_dyn(1, input_file)
+  call get_command_arg_dyn(2, output_file)
   ! Read the names of the variables:
   call read_column(varpossib, "variable_list_ml2pl.txt")
   n_var = size(varpossib)
@@ -121,11 +122,11 @@ PROGRAM ml2pl
   call nf95_inquire_variable(ncid_in, varid_in(1), dimids = dimids)
   call nf95_inquire_dimension(ncid_in, dimids(3), nclen = llm)
 
-  if (command_argument_count() == 1) then
+  if (command_argument_count() == 2) then
      ncid_pres_in = ncid_in
   else
-     ! {command_argument_count() == 2}
-     call get_command_arg_dyn(2, pressure_file)
+     ! {command_argument_count() == 3}
+     call get_command_arg_dyn(3, pressure_file)
      call nf95_open(pressure_file, nf95_nowrite, ncid_pres_in)
   end if
 
@@ -183,7 +184,7 @@ PROGRAM ml2pl
   call nf95_gw_var(ncid_in, varid_t_in, time)
   ntim = size(time)
 
-  call nf95_create("output_file_ml2pl.nc", nf95_clobber, ncid_out)
+  call nf95_create(output_file, nf95_clobber, ncid_out)
   call nf95_put_att(ncid_out, nf95_global, 'comment', &
        'interpolated to pressure levels by ml2pl')
   call nf95_def_dim(ncid_out, lon_name, n_lon, dim_x)

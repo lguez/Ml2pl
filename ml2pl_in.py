@@ -117,7 +117,7 @@ with open("variable_list_ml2pl.txt", "w") as f_obj:
 
 # Run the Fortran program:
 
-subp_args = [executable, args.input_file]
+subp_args = [executable, args.input_file, args.output_file]
 
 if args.pressure_file:
     subp_args.append(args.pressure_file)
@@ -130,8 +130,6 @@ subprocess.run(
 )
 # (Quotes around $pressure_var are necessary for the case when
 # pressure_var is not defined.)
-
-os.rename("output_file_ml2pl.nc", args.output_file)
 
 # Clean up:
 os.remove("variable_list_ml2pl.txt")
