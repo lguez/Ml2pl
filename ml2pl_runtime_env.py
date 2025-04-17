@@ -4,11 +4,6 @@
 
 exec(open("/usr/share/modules/init/python.py").read(), globals())
 module("purge")
-module(
-    "load",
-    "intel/...",
-    "netcdf-c/...",
-    "netcdf-fortran/..."
-)
+module("load", "--silent", "intel/...", "netcdf-c/...", "netcdf-fortran/...")
 import os
 os.environ["LD_LIBRARY_PATH"] += ":...NetCDF..."
