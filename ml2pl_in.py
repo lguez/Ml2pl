@@ -128,8 +128,8 @@ subprocess.run(
     input=f'{nv}\n{nw}\n"{args.pressure_var}"\n',
     check=True,
 )
-# (Quotes around $pressure_var are necessary for the case when
-# pressure_var is not defined.)
+# (Quotes around args.pressure_var are necessary for the case when
+# args.pressure_var is not defined.)
 
 # Clean up:
 os.remove("variable_list_ml2pl.txt")
