@@ -275,16 +275,19 @@ PROGRAM ml2pl
         mask = pres(:, :, 1) /= missing
      end if
 
-     where(mask)
-        descending_pressure = pres(:, :, 1) > pres(:, :, 2)
-     elsewhere
-        descending_pressure = .true.
-     end where
+     if (l == 1) then
+        where(mask)
+           descending_pressure = pres(:, :, 1) > pres(:, :, 2)
+        elsewhere
+           descending_pressure = .true.
+        end where
 
-     all_desc_press = all(descending_pressure)
-     if (.not. all_desc_press) &
-          call assert(.not. any(ieee_is_nan(pres(:, :, 1))), &
-          "ml2pl: NaN found in pressure field, use another missing value")
+        all_desc_press = all(descending_pressure)
+        if (.not. all_desc_press) &
+             call assert(.not. any(ieee_is_nan(pres(:, :, 1))), &
+             "ml2pl: NaN found in pressure field, use another missing value")
+        if (nv < n_var) surf_lev = merge(1, llm, all_desc_press)
+     end if
 
      do n = 1, n_var
         call nf95_get_var(ncid_in, varid_in(n), var_ml(:, :, :, n), &
@@ -307,7 +310,6 @@ PROGRAM ml2pl
 
      if (nv < n_var) then
         ! Variables set to 0 or missing below surface
-        surf_lev = merge(1, llm, all_desc_press)
         surf_loc = 1 ! first guess
 
         do j = 1, n_lat
