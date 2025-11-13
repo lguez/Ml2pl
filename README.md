@@ -190,13 +190,13 @@ variables for each `-v`, `-w` or `-m`.
 
 The pressure field at model levels can be specified in input-file or
 pressure-file either through hybrid coefficients and surface pressure
-or directly from 4-dimensional pressure. In both cases, pressure must
-decrease when the index of model level increases. This is checked
-quickly in the program. If option `-p` is not used then the program
-will look for NetCDF variables `ap`, `b` (hybrid coefficients) and
-`ps` (surface pressure) in the input file or the pressure file. If the
-program does not find NetCDF variable `ap` then it looks for NetCDF
-variables `a` and `p0` and computes `ap = a * p0`.
+or directly from 4-dimensional pressure. There is no constraint on the
+ordering of model levels: it can be ascending or descending
+pressure. If option `-p` is not used then the program will look for
+NetCDF variables `ap`, `b` (hybrid coefficients) and `ps` (surface
+pressure) in the input file or the pressure file. If the program does
+not find NetCDF variable `ap` then it looks for NetCDF variables `a`
+and `p0` and computes `ap = a * p0`.
 
 Let us call $n_\mathrm{mod}$ the number of model levels.
 $n_\mathrm{mod}$ is obtained by the program by looking at the size of
@@ -242,18 +242,17 @@ precision then you will get a warning when you run `ml2pl.py`:
   if you get the message:
 
 		Using "pres" for the input pressure field...
-		An assertion failed with this tag: Input pressure field should decrease with increasing level index
+		An assertion failed with this tag: NaN found in pressure field, use another missing value
 		program terminated by assert1
 
-	the reason may be that your input pressure field has NaN values
-    instead of the value specified by the `missing_value` or
-    `_FillValue` attribute. This is a defect of your data. You can fix
-    it with the following command:
+  your input pressure field has NaN values instead of the value
+  specified by the `missing_value` or `_FillValue` attribute. This is
+  a defect of your data. You can fix it with the following command:
 
 		cdo setctomiss,nan my_input.nc my_input_fixed.nc
 
-	See [cdo
-    documentation](https://code.mpimet.mpg.de/projects/cdo/embedded/index.html#x1-3530002.6.15).
+  See [cdo
+  documentation](https://code.mpimet.mpg.de/projects/cdo/embedded/index.html#x1-3530002.6.15).
 
 ## Main memory
 
