@@ -7,6 +7,8 @@ PROGRAM ml2pl
   ! pres, ap, ps and plev are in the same unit.
 
   use, intrinsic:: ISO_FORTRAN_ENV
+  use, intrinsic:: ieee_arithmetic, only: IEEE_SUPPORT_DATATYPE, &
+       ieee_support_nan, ieee_is_nan
 
   ! Libraries:
   use jumble, only: read_column, assert, get_command_arg_dyn
@@ -87,6 +89,8 @@ PROGRAM ml2pl
 
   !---------------------------------------------------------------------
 
+  call assert(IEEE_SUPPORT_DATATYPE(0.), ieee_support_nan(0.), &
+       "inst_eddies: not enough IEEE support")
   call get_command_arg_dyn(1, input_file)
   call get_command_arg_dyn(2, output_file)
   ! Read the names of the variables:
@@ -278,6 +282,9 @@ PROGRAM ml2pl
      end where
 
      all_desc_press = all(descending_pressure)
+     if (.not. all_desc_press) &
+          call assert(.not. any(ieee_is_nan(pres(:, :, 1))), &
+          "ml2pl: NaN found in pressure field, use another missing value")
 
      do n = 1, n_var
         call nf95_get_var(ncid_in, varid_in(n), var_ml(:, :, :, n), &
