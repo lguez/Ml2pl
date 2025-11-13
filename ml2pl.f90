@@ -26,8 +26,7 @@ PROGRAM ml2pl
   INTEGER n_plev ! nombre de niveaux de pression en sortie
 
   REAL, allocatable:: pres(:, :, :) ! (n_lon, n_lat, llm) Input
-  ! pressure field at model levels. Should decrease with increasing
-  ! level index.
+  ! pressure field at model levels
 
   REAL, allocatable:: ap(:) ! (llm)
   REAL, allocatable:: b(:) ! (llm)
@@ -70,6 +69,7 @@ PROGRAM ml2pl
   ! variables at pressure levels
 
   integer surf_loc ! location of surface in target pressure levels
+  integer surf_lev ! index of surface level in field pres
 
   REAL, allocatable:: plev(:) ! (n_plev)
   ! target pressure levels, in descending order
@@ -82,6 +82,7 @@ PROGRAM ml2pl
   ! limited-area, non-rectangular, domain.
 
   logical, allocatable:: descending_pressure(:, :)
+  logical all_desc_press ! descending pressure at all geographical points
   real missing ! missing value for NetCDF variable ps or pressure_var
 
   !---------------------------------------------------------------------
@@ -270,16 +271,13 @@ PROGRAM ml2pl
         mask = pres(:, :, 1) /= missing
      end if
 
-     ! Quick check:
-
      where(mask)
         descending_pressure = pres(:, :, 1) > pres(:, :, 2)
      elsewhere
         descending_pressure = .true.
      end where
 
-     call assert(all(descending_pressure), &
-          "Input pressure field should decrease with increasing level index")
+     all_desc_press = all(descending_pressure)
 
      do n = 1, n_var
         call nf95_get_var(ncid_in, varid_in(n), var_ml(:, :, :, n), &
@@ -302,17 +300,19 @@ PROGRAM ml2pl
 
      if (nv < n_var) then
         ! Variables set to 0 or missing below surface
+        surf_lev = merge(1, llm, all_desc_press)
         surf_loc = 1 ! first guess
 
         do j = 1, n_lat
            do i = 1, n_lon
               if (mask(i, j)) then
                  if (n_plev >= 2) then
-                    call hunt(plev, pres(i, j, 1), surf_loc)
-                    ! {plev(surf_loc + 1) <= pres(i, j, 1) <=  plev(surf_loc)}
+                    call hunt(plev, pres(i, j, surf_lev), surf_loc)
+                    ! {plev(surf_loc + 1) <= pres(i, j, surf_lev) <=
+                    ! plev(surf_loc)}
                  else
                     ! n_plev == 1
-                    surf_loc = merge(0, 1, plev(1) <= pres(i, j, 1))
+                    surf_loc = merge(0, 1, plev(1) <= pres(i, j, surf_lev))
                  end if
 
                  var_pl(i, j, :surf_loc, nv + 1: nv + nw) = 0.
