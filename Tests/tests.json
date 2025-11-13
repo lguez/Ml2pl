@@ -150,5 +150,36 @@
     "symlink": [
       "$src_dir/Tests/press_levels.txt"
     ]
+  },
+  "Ascending": {
+    "description": "Case where the model levels are in order of ascending pressure.",
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "-w",
+      "U",
+      "-p",
+      "PRESSURE",
+      "$src_dir/Tests/ERA5_U_pressure_all_levels_2022.nc",
+      "ERA5_U_isobaric_levels.nc"
+    ],
+    "symlink": [
+      "$src_dir/Tests/press_levels.txt"
+    ]
+  },
+  "LAM_NaN": {
+    "description": "Like the test Missing, except that the input pressure field contains NaN on the missing part of the geographical domain, disagreeing with the missing value attributes.",
+    "command": [
+      "$install_dir/bin/ml2pl.py",
+      "-w",
+      "vitu",
+      "-p",
+      "pres",
+      "$src_dir/Tests/LAM_NaN.nc",
+      "LAM_pl.nc"
+    ],
+    "symlink": [
+      "$src_dir/Tests/press_levels.txt"
+    ],
+    "xfail": true
   }
 }
