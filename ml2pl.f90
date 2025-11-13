@@ -211,7 +211,10 @@ PROGRAM ml2pl
   ! Pressure level:
   call nf95_def_var(ncid_out, 'plev', nf95_float, dim_z, varid_z)
   call nf95_put_att(ncid_out, varid_z, 'standard_name', 'air_pressure')
-  call nf95_copy_att(ncid_pres_in, varid_p, 'units', ncid_out, varid_z)
+  call nf95_copy_att(ncid_pres_in, varid_p, 'units', ncid_out, varid_z, ncerr)
+  if (ncerr /= nf95_noerr) write(error_unit, fmt = *) "Warning: units " &
+       // "attribute not found for pressure in input NetCDF file, so plev " &
+       // "will not have a units attribute in output file."
 
   ! Time:
   call nf95_def_var(ncid_out, time_name, nf95_double, dim_t, varid_t)
