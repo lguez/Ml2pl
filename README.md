@@ -179,7 +179,8 @@ All computations are done with single-precision real numbers and
 output is in single-precision. So if the input fields are in double
 precision, they are first converted to single-precision.
 
-input-file, output-file and pressure-file are NetCDF files.
+The arguments input-file, output-file and pressure-file of `ml2pl.py`
+are NetCDF files.
 
 You must list the variables you want to interpolate, each variable
 listed after either `-v`, `-w` or `-m`. There must be at least one
