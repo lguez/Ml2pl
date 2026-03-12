@@ -11,7 +11,7 @@ option(FETCH "Download")
 
 if(FETCH)
   FetchContent_Declare(Jumble GIT_REPOSITORY
-    https://github.com/lguez/Jumble.git GIT_TAG e4c47ce3)
+    https://github.com/lguez/Jumble.git GIT_TAG 0d70e3ef)
   FetchContent_Declare(NetCDF95 GIT_REPOSITORY
     https://github.com/lguez/NetCDF95.git GIT_TAG 48b5834)
   FetchContent_Declare(Numer_Rec_95 GIT_REPOSITORY
