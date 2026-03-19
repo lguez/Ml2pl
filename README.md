@@ -15,7 +15,7 @@ also works with atmospheric data from other sources. It is used in
 
 If you want to use this program on the computers jean-zay at
 [Idris](http://www.idris.fr), or irene at
-[TGCC](https://www-hpc.cea.fr/fr/TGCC.html), or spirit at
+[TGCC](https://www-hpc.cea.fr/fr/TGCC.html), or spirit or spiritx at
 [IPSL](https://documentations.ipsl.fr/spirit/index.html), the program
 is already installed at the following paths.
 
@@ -170,7 +170,7 @@ fields may be defined on a non-rectangular limited-area domain.
 At given longitude, latitude and time, if a target pressure level is
 lower than the lower bound of the input pressure field, then variables
 are extrapolated to this target pressure level. If a target pressure
-level is higher than the higher bound of the input pressure field,
+level is greater than the greater bound of the input pressure field,
 then each variable may be extrapolated or set to 0 or set to missing
 at this target pressure level. This is controlled by options `-v`,
 `-w` and `-m`.
