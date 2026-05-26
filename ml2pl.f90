@@ -93,9 +93,11 @@ PROGRAM ml2pl
        "inst_eddies: not enough IEEE support")
   call get_command_arg_dyn(1, input_file)
   call get_command_arg_dyn(2, output_file)
+  read *, nv, nw, n_var
+  allocate(varpossib(n_var))
+
   ! Read the names of the variables:
-  call read_column(varpossib, "variable_list_ml2pl.txt")
-  n_var = size(varpossib)
+  read *, varpossib
 
   ! Read target pressure levels:
   call read_column(plev, "press_levels.txt", skiprows = 1)
@@ -106,7 +108,7 @@ PROGRAM ml2pl
   call assert(all(plev(:n_plev - 1) /= plev(2:)), &
        "Pressure levels should be distinct")
 
-  read *, nv, nw, pressure_var
+  read *, pressure_var
   call nf95_open(input_file, nf95_nowrite, ncid_in)
 
   ! Read horizontal coordinates:

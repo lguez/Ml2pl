@@ -6,10 +6,6 @@ The target pressure levels should be in a file called
 "press_levels.txt", in the same unit as input pressure field. For
 further information, see https://github.com/lguez/Ml2pl.
 
-Do not run several instances of this script in parallel in the same
-directory. It creates a temporary file, with a name that is not made
-different for different instances.
-
 """
 
 # Author: Lionel GUEZ
@@ -109,11 +105,10 @@ for my_option in ["v", "w", "m"]:
 
 nv = len(args.v)
 nw = len(args.w)
+n_var = nv + nw + len(args.m)
 
-# Create the list of variables:
-with open("variable_list_ml2pl.txt", "w") as f_obj:
-    for my_var in args.v + args.w + args.m:
-        print(my_var, file=f_obj)
+# Create the string containing all the variable names:
+concat_variables = "\n".join(args.v + args.w + args.m)
 
 # Run the Fortran program:
 
@@ -125,11 +120,8 @@ if args.pressure_file:
 subprocess.run(
     subp_args,
     text=True,
-    input=f'{nv}\n{nw}\n"{args.pressure_var}"\n',
+    input=f'{nv}\n{nw}\n{n_var}\n{concat_variables}\n"{args.pressure_var}"\n',
     check=True,
 )
 # (Quotes around args.pressure_var are necessary for the case when
 # args.pressure_var is not defined.)
-
-# Clean up:
-os.remove("variable_list_ml2pl.txt")
