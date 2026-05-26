@@ -72,7 +72,7 @@ parser.add_argument(
     "target pressure level is below surface",
 )
 parser.add_argument(
-    "--version", action="version", version="%(prog)s @Ml2pl_VERSION@"
+    "--version", action="version", version="%(prog)s @Ml2pl_VERSION@-alpha"
 )
 args = parser.parse_args()
 
