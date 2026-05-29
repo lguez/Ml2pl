@@ -21,7 +21,7 @@ is already installed at the following paths.
 
 On jean-zay:
 
-    /gpfswork/rech/lmd/rdzt899/bin/ml2pl.py
+    /gpfswork/rech/wfe/rdzt899/bin/ml2pl.py
 
 On irene:
 
